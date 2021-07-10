@@ -1,7 +1,6 @@
 package com.infinum.library
 
 import java.time.LocalDate
-import java.time.Period
 
 object Library {
     private val storedBooks: MutableList<Book> = mutableListOf()
@@ -13,15 +12,15 @@ object Library {
     }
 
     fun isBookAvailable(title: String, authorName: String): Boolean{
-        return storedBooks.stream().anyMatch({ book -> book.match(title,authorName) })
+        return storedBooks.stream().anyMatch { book -> book.match(title, authorName) }
     }
 
     fun rentBook(title: String, authorName: String, customerOIB: String, duration: RentDuration): Book?{
         val book = storedBooks.firstOrNull { book -> book.match(title, authorName) } ?: return null
         storedBooks.remove(book)
-        if(customerOIB !in rentedBooks.keys) rentedBooks.put(customerOIB, mutableListOf())
-        rentedBooks.get(customerOIB)!!.add( RentedBook(book,duration))
-        return book;
+        if(customerOIB !in rentedBooks.keys) rentedBooks[customerOIB] = mutableListOf()
+        rentedBooks[customerOIB]!!.add( RentedBook(book,duration))
+        return book
     }
     fun returnBook(book:Book){
         var returned = false
@@ -40,7 +39,7 @@ object Library {
         if(!returned) throw BookNotRentedException(book)
     }
     fun isBookRented(book: Book): Boolean{
-        var rented: Boolean = false
+        var rented = false
         searchRented(
             { true },
             { bookList ->
@@ -73,7 +72,7 @@ object Library {
         constructor( book: Book, duration: RentDuration ):
                 this(book, dueDate(duration))
     }
-
+    /*
     fun printStoredBooks(){
         for(book in storedBooks)
             println(book)
@@ -85,6 +84,7 @@ object Library {
                 println("   - $book - Due: $due")
         }
     }
+    */
 }
 
 class BookNotRentedException(book: Book) : RuntimeException("$book was never rented")
