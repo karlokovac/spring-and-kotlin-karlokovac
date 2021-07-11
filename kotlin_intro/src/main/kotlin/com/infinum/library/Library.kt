@@ -3,88 +3,49 @@ package com.infinum.library
 import java.time.LocalDate
 
 object Library {
-    private val storedBooks: MutableList<Book> = mutableListOf()
-    private val rentedBooks: MutableMap<String,MutableList<RentedBook>> = hashMapOf()
-
-    fun addBooks(vararg books: Book){
-        for( book in books )
-            storedBooks.add(book)
-    }
+    private val rentedBooks: MutableMap<RentedBook,String> = hashMapOf()
+    private val storedBooks: MutableList<Book> = mutableListOf(
+        Book("The Hunger Games"," Suzanne Collins"),
+        Book("Harry Potter and the Order of the Phoenix"," J.K. Rowling"),
+        Book("To Kill a Mockingbird","Harper Lee"),
+        Book("Pride and Prejudice"," Jane Austen"),
+        Book("Twilight","Stephenie Meyer"),
+        Book("The Book Thief","Markus Zusak"),
+        Book("Animal Farm","George Orwell"),
+        Book("The Chronicles of Narnia","C.S. Lewis"),
+        Book("The Hobbit and The Lord of the Rings","J.R.R. Tolkien"),
+        Book("The Fault in Our Stars","John Green")
+    )
 
     fun isBookAvailable(title: String, authorName: String): Boolean{
-        return storedBooks.stream().anyMatch { book -> book.match(title, authorName) }
+        return storedBooks.any { book -> book.title==title && book.authorName==authorName }
     }
 
     fun rentBook(title: String, authorName: String, customerOIB: String, duration: RentDuration): Book?{
-        val book = storedBooks.firstOrNull { book -> book.match(title, authorName) } ?: return null
-        storedBooks.remove(book)
-        if(customerOIB !in rentedBooks.keys) rentedBooks[customerOIB] = mutableListOf()
-        rentedBooks[customerOIB]!!.add( RentedBook(book,duration))
-        return book
+        return storedBooks
+            .firstOrNull { book -> book.title==title && book.authorName==authorName }
+            ?.also { book ->
+                storedBooks.remove(book)
+                rentedBooks[RentedBook(book, dueDate(duration))] = customerOIB
+            }
     }
     fun returnBook(book:Book){
-        var returned = false
-        searchRented(
-            { true },
-            { bookList ->
-                for( rentedBook in bookList) {
-                    if( book.inventoryNumber == rentedBook.book.inventoryNumber) {
-                        bookList.remove(rentedBook)
-                        storedBooks.add(rentedBook.book)
-                        returned = true
-                        break
-                    }
-                }
-            })
-        if(!returned) throw BookNotRentedException(book)
+        rentedBooks.keys.firstOrNull { rentedBook -> rentedBook.book == book}
+            ?.also { rentedBook ->
+                rentedBooks.remove(rentedBook)
+                storedBooks.add(rentedBook.book)
+            } ?: throw BookNotRentedException(book)
     }
     fun isBookRented(book: Book): Boolean{
-        var rented = false
-        searchRented(
-            { true },
-            { bookList ->
-                for (rentedBook in bookList) {
-                    if (book == rentedBook.book) {
-                        rented = true
-                        break
-                    }
-                }
-            })
-        return rented
+        return rentedBooks.keys.any{ rentedBook -> rentedBook.book == book }
     }
-    fun getRentedBooks(customerOIB: String): List<RentedBook>?{
-        var rentedBooks: MutableList<RentedBook>? = null
-        searchRented(
-            { mapCustomerOIB -> mapCustomerOIB == customerOIB },
-            { bookList -> rentedBooks = bookList })
-        return rentedBooks?.toList()
+    fun getRentedBooks(customerOIB: String): List<RentedBook>{
+        return rentedBooks.keys.filter { rentedBook ->
+            rentedBooks[rentedBook] == customerOIB }
     }
 
-    private fun searchRented(predicate:(String)->Boolean, action:(MutableList<RentedBook>)-> Unit){
-        for( (customer,bookList) in rentedBooks.entries) {
-            if( predicate.invoke(customer)) {
-                action.invoke(bookList)
-            }
-        }
-    }
-
-    data class RentedBook( val book: Book, val dueDate: LocalDate  ){
-        constructor( book: Book, duration: RentDuration ):
-                this(book, dueDate(duration))
-    }
-    /*
-    fun printStoredBooks(){
-        for(book in storedBooks)
-            println(book)
-    }
-    fun printRentedBooks(){
-        for( (customer,bookList) in rentedBooks.entries) {
-            println("$customer:")
-            for ( (book,due) in bookList)
-                println("   - $book - Due: $due")
-        }
-    }
-    */
+    private fun dueDate(duration: RentDuration): LocalDate = LocalDate.now().plus(duration.period)
+    data class RentedBook( val book: Book, val dueDate: LocalDate )
 }
 
 class BookNotRentedException(book: Book) : RuntimeException("$book was never rented")

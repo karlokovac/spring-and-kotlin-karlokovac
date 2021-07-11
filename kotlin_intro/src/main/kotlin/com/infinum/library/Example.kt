@@ -1,19 +1,6 @@
 package com.infinum.library
 
 fun main(){
-    Library.addBooks(
-        Book("The Hunger Games"," Suzanne Collins"),
-        Book("Harry Potter and the Order of the Phoenix"," J.K. Rowling"),
-        Book("To Kill a Mockingbird","Harper Lee"),
-        Book("Pride and Prejudice"," Jane Austen"),
-        Book("Twilight","Stephenie Meyer"),
-        Book("The Book Thief","Markus Zusak"),
-        Book("Animal Farm","George Orwell"),
-        Book("The Chronicles of Narnia","C.S. Lewis"),
-        Book("The Hobbit and The Lord of the Rings","J.R.R. Tolkien"),
-        Book("The Fault in Our Stars","John Green"),
-    )
-
     var available = Library.isBookAvailable("The Hunger Games"," Suzanne Collins")
     println("\nThe Hunger Games - Suzanne Collins --- available:$available\n")
 
@@ -47,7 +34,6 @@ fun main(){
 
     val rentedList = Library.getRentedBooks("0123456789")
     println("Rented books for 0123456789")
-    if(rentedList != null)
-        for( (book,dueDate) in rentedList )
-            println("   $book ; dueDate: $dueDate")
+    for( (book,dueDate) in rentedList )
+        println("   $book ; dueDate: $dueDate")
 }
