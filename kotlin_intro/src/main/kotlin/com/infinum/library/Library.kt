@@ -41,7 +41,7 @@ object Library {
     }
     fun getRentedBooks(customerOIB: String): List<RentedBook>{
         return rentedBooks
-            .filter { (book, rentData) -> rentData.customerOIB == customerOIB }
+            .filter { (_, rentData) -> rentData.customerOIB == customerOIB }
             .map { (book, rentData)  -> RentedBook(book, rentData.dueDate ) }
     }
 
