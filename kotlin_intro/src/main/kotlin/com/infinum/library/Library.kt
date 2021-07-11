@@ -40,9 +40,9 @@ object Library {
         return rentedBooks.containsKey(book)
     }
     fun getRentedBooks(customerOIB: String): List<RentedBook>{
-        return rentedBooks.keys
-            .filter { book -> rentedBooks[book]!!.customerOIB == customerOIB }
-            .map { book -> RentedBook(book, rentedBooks[book]!!.dueDate ) }
+        return rentedBooks
+            .filter { (book, rentData) -> rentData.customerOIB == customerOIB }
+            .map { (book, rentData)  -> RentedBook(book, rentData.dueDate ) }
     }
 
     private fun dueDate(duration: RentDuration): LocalDate = LocalDate.now().plus(duration.period)
