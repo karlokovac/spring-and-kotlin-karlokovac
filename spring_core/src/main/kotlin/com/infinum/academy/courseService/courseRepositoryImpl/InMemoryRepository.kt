@@ -3,17 +3,13 @@ package com.infinum.academy.courseService.courseRepositoryImpl
 import com.infinum.academy.courseService.CourseRepository
 import com.infinum.academy.courseService.Course
 import com.infinum.academy.courseService.DataSource
-import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.stereotype.Component
 
-@Component
-@Qualifier("in-memory")
 class InMemoryCourseRepository(dataSource: DataSource): CourseRepository {
 
     private val courses = mutableMapOf<Long, Course>()
 
     init {
-        println("DataSource: $dataSource")
+        println(dataSource)
     }
 
     override fun insert(name: String): Long {
