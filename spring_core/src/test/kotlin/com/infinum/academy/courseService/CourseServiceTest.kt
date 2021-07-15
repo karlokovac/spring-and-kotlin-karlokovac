@@ -4,7 +4,8 @@ import com.infinum.academy.courseService.courseRepositoryImpl.CourseNotFoundExce
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -28,7 +29,7 @@ class CourseServiceTest {
         } returns expectedCourse
 
         val actualCourse = courseService.findCourseById(1)
-        Assertions.assertThat(expectedCourse).isEqualTo(actualCourse)
+        assertThat(expectedCourse).isEqualTo(actualCourse)
         verify(exactly = 1) { courseRepository.findById(any()) }
     }
 
@@ -41,7 +42,7 @@ class CourseServiceTest {
         } returns expectedId
 
         val actualId = courseService.insertCourse("Spring & Kotlin")
-        Assertions.assertThat(expectedId).isEqualTo(actualId)
+        assertThat(expectedId).isEqualTo(actualId)
         verify(exactly = 1) { courseRepository.insert(any()) }
     }
 
@@ -54,7 +55,7 @@ class CourseServiceTest {
         } returns expectedCourse
 
         val actualCourse = courseService.deleteCourseById(1)
-        Assertions.assertThat(expectedCourse).isEqualTo(actualCourse)
+        assertThat(expectedCourse).isEqualTo(actualCourse)
         verify(exactly = 1) { courseRepository.deleteById(any()) }
     }
 
@@ -65,7 +66,7 @@ class CourseServiceTest {
             courseRepository.findById(1)
         } throws CourseNotFoundException(1)
 
-        Assertions.assertThatThrownBy {
+        assertThatThrownBy {
             courseService.findCourseById(1)
         }.isInstanceOf(CourseNotFoundException::class.java)
             .hasMessage("Course with and ID 1 not found")
@@ -78,7 +79,7 @@ class CourseServiceTest {
             courseRepository.deleteById(1)
         } throws CourseNotFoundException(1)
 
-        Assertions.assertThatThrownBy {
+        assertThatThrownBy {
             courseService.deleteCourseById(1)
         }.isInstanceOf(CourseNotFoundException::class.java)
             .hasMessage("Course with and ID 1 not found")

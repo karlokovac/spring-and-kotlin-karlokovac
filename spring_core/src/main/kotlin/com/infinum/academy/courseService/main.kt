@@ -47,13 +47,14 @@ class ApplicationConfiguration(
     @Value("\${spring.datasource.persistence}") private val persistence: Boolean
 ){
     @Bean
-    fun courseRepository(dataSource: DataSource): CourseRepository{
+    fun courseRepository(dataSource: DataSource, resource: Resource): CourseRepository{
         return when(persistence){
-            true -> InFileCourseRepository( resource(dataSource) )
+            true -> InFileCourseRepository( resource )
             false -> InMemoryCourseRepository( dataSource )
         }
     }
 
+    @Bean
     fun resource(dataSource: DataSource): Resource{
         return FileSystemResource(dataSource.dbName)
     }

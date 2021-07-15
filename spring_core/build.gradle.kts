@@ -40,14 +40,4 @@ tasks.test {
 
 jacoco {
     toolVersion = "0.8.7"
-    reportsDirectory.set(layout.buildDirectory.dir("customJacocoReportDir"))
-}
-
-tasks.jacocoTestReport {
-    dependsOn(tasks.test) // tests are required to run before generating the report
-    reports {
-        xml.required.set(false)
-        csv.required.set(false)
-        html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
-    }
 }
