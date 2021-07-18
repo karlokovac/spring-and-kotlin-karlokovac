@@ -9,7 +9,7 @@ data class CarCheckUp(
 
     val id: Long = generateUniqueCode(),
     val date: LocalDate = LocalDate.now()
-){
+) {
     constructor(carCheckUpDTO: CarCheckUpDTO) : this(
         carCheckUpDTO.workerName,
         carCheckUpDTO.price,

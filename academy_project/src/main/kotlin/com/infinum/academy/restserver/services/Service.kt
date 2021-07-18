@@ -10,24 +10,23 @@ import org.springframework.stereotype.Component
 @Component
 class Service(
     val carRepository: Repository
-){
+) {
 
-    fun addCar(carDTO: CarDTO): Car?{
+    fun addCar(carDTO: CarDTO): Car? {
         val car = Car(carDTO)
-        if( carRepository.addCar(car) )
+        if (carRepository.addCar(car))
             return car
         return null
     }
 
-    fun getCar(id: Long): Car?{
+    fun getCar(id: Long): Car? {
         return carRepository.getCar(id)
     }
 
-    fun addCheckUp(carCheckUpDTO: CarCheckUpDTO): CarCheckUp?{
+    fun addCheckUp(carCheckUpDTO: CarCheckUpDTO): CarCheckUp? {
         val carCheckUp = CarCheckUp(carCheckUpDTO)
-        if( carRepository.addCarCheckUp(carCheckUp) )
+        if (carRepository.addCarCheckUp(carCheckUp))
             return carCheckUp
         return null
     }
-
 }

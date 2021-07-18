@@ -25,8 +25,8 @@ class ServiceTest {
 
     @Test
     fun testAddingCar() {
-        val passedCarDTO1 = CarDTO(1L,"Ford","Ka",2010,12345L)
-        val passedCarDTO2 = CarDTO(1L,"Ford","Ka",2010,34567L)
+        val passedCarDTO1 = CarDTO(1L, "Ford", "Ka", 2010, 12345L)
+        val passedCarDTO2 = CarDTO(1L, "Ford", "Ka", 2010, 34567L)
 
         every {
             repository.addCar(any())
@@ -35,16 +35,16 @@ class ServiceTest {
         val actualCar1 = carService.addCar(passedCarDTO1)
         val actualCar2 = carService.addCar(passedCarDTO2)
 
-        val expectedCar1 = Car(1L,"Ford","Ka",2010,12345L,1)
-        val expectedCar2 = Car(1L,"Ford","Ka",2010,34567L,2)
+        val expectedCar1 = Car(1L, "Ford", "Ka", 2010, 12345L, 1)
+        val expectedCar2 = Car(1L, "Ford", "Ka", 2010, 34567L, 2)
 
         assertThat(actualCar1).isEqualTo(expectedCar1)
         assertThat(actualCar2).isEqualTo(expectedCar2)
     }
     @Test
     fun testAddingCarCheckUp() {
-        val passedCarCheckUpDTO1 = CarCheckUpDTO("Ante Antić",1000f,1)
-        val passedCarCheckUpDTO2 = CarCheckUpDTO("Ivo Ivić",2000f,1)
+        val passedCarCheckUpDTO1 = CarCheckUpDTO("Ante Antić", 1000f, 1)
+        val passedCarCheckUpDTO2 = CarCheckUpDTO("Ivo Ivić", 2000f, 1)
 
         every {
             repository.addCarCheckUp(any())
@@ -53,8 +53,8 @@ class ServiceTest {
         val actualCarCheckUp1 = carService.addCheckUp(passedCarCheckUpDTO1)
         val actualCarCheckUp2 = carService.addCheckUp(passedCarCheckUpDTO2)
 
-        val expectedCarCheckUp1 = CarCheckUp("Ante Antić",1000f,1,1)
-        val expectedCarCheckUp2 = CarCheckUp("Ivo Ivić",2000f,1,2)
+        val expectedCarCheckUp1 = CarCheckUp("Ante Antić", 1000f, 1, 1)
+        val expectedCarCheckUp2 = CarCheckUp("Ivo Ivić", 2000f, 1, 2)
 
         assertThat(actualCarCheckUp1).isEqualTo(expectedCarCheckUp1)
         assertThat(actualCarCheckUp2).isEqualTo(expectedCarCheckUp2)
@@ -62,7 +62,8 @@ class ServiceTest {
 
     @Test
     fun testFetchingCar() {
-        val expectedCar = Car(1L,"Ford","Ka",2010,12345L,1)
+
+        val expectedCar = Car(1L, "Ford", "Ka", 2010, 12345L, 1)
         every {
             repository.getCar(1L)
         } returns expectedCar
@@ -71,5 +72,4 @@ class ServiceTest {
 
         assertThat(actualCar).isEqualTo(expectedCar)
     }
-
 }

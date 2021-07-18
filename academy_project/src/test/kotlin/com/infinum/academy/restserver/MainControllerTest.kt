@@ -26,21 +26,21 @@ class MainControllerTest @Autowired constructor(
     lateinit var carService: Service
 
     @BeforeEach
-    fun setUp(){
+    fun setUp() {
         Car.counter = 1
         CarCheckUp.counter = 1
     }
 
     @Test
-    fun testAddingCar(){
-        val carDTO = CarDTO(1L,"Ford","Ka", 2010,12345L)
+    fun testAddingCar() {
+        val carDTO = CarDTO(1L, "Ford", "Ka", 2010, 12345L)
         val car = Car(carDTO)
 
-        every{
+        every {
             carService.addCar(any())
         } returns car
 
-        mvc.post("/addCar"){
+        mvc.post("/addCar") {
             content = mapper.writeValueAsString(carDTO)
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
@@ -50,15 +50,15 @@ class MainControllerTest @Autowired constructor(
     }
 
     @Test
-    fun testAddingCarCarCheckUp(){
-        val carCheckUpDTO = CarCheckUpDTO("Ante Antic",145f,12345L)
+    fun testAddingCarCarCheckUp() {
+        val carCheckUpDTO = CarCheckUpDTO("Ante Antic", 145f, 12345L)
         val carCheckUp = CarCheckUp(carCheckUpDTO)
 
-        every{
+        every {
             carService.addCheckUp(any())
         } returns carCheckUp
 
-        mvc.post("/addCarCheckUp"){
+        mvc.post("/addCarCheckUp") {
             content = mapper.writeValueAsString(carCheckUpDTO)
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
@@ -68,23 +68,23 @@ class MainControllerTest @Autowired constructor(
     }
 
     @Test
-    fun testfetchingExistingCar(){
-        val car = Car(1L,"Ford","Ka", 2010,12345L,1)
+    fun testfetchingExistingCar() {
+        val car = Car(1L, "Ford", "Ka", 2010, 12345L, 1)
 
-        every{
+        every {
             carService.getCar(any())
         } returns car
 
         mvc.get("/fetchCar?id=1").andExpect {
             status { is2xxSuccessful() }
             jsonPath("$.id") { value("1") }
-            jsonPath("$.manufacturerName") {value("Ford")}
+            jsonPath("$.manufacturerName") { value("Ford") }
         }
     }
 
     @Test
-    fun testFetchingNonExistingCar(){
-        every{
+    fun testFetchingNonExistingCar() {
+        every {
             carService.getCar(any())
         } returns null
 

@@ -20,14 +20,14 @@ class MainController(
 
     @PostMapping("/addCar")
     fun addCar(@RequestBody carDTO: CarDTO): ResponseEntity<Car> {
-        carService.addCar( carDTO )?.also { return ResponseEntity(it, HttpStatus.OK) }
+        carService.addCar(carDTO)?.also { return ResponseEntity(it, HttpStatus.OK) }
         return ResponseEntity(null, HttpStatus.BAD_REQUEST)
     }
 
     @GetMapping("/fetchCar")
     fun fetchCar(@RequestParam id: Long): ResponseEntity<Car> {
-        carService.getCar(id)?.also { return ResponseEntity( it, HttpStatus.OK) }
-        return ResponseEntity( null, HttpStatus.NOT_FOUND)
+        carService.getCar(id)?.also { return ResponseEntity(it, HttpStatus.OK) }
+        return ResponseEntity(null, HttpStatus.NOT_FOUND)
     }
 
     @PostMapping("/addCarCheckUp")

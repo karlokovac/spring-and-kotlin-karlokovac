@@ -12,7 +12,7 @@ data class Car constructor(
     val id: Long = generateUniqueCode(),
     val dateAdded: LocalDate = LocalDate.now(),
     val carCheckUps: MutableList<CarCheckUp> = mutableListOf(),
-){
+) {
     constructor(carDTO: CarDTO) : this(
         carDTO.ownerId,
         carDTO.manufacturerName,
