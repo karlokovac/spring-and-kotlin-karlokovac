@@ -6,6 +6,6 @@ import org.springframework.boot.runApplication
 @SpringBootApplication
 class RestServerApplication
 
-fun main(args: Array<String>) {
+fun main() {
     runApplication<RestServerApplication>()
 }
