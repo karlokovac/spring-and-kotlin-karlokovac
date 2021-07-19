@@ -4,7 +4,7 @@ import com.infinum.academy.restserver.models.Car
 import com.infinum.academy.restserver.models.CarCheckUp
 import com.infinum.academy.restserver.models.CarCheckUpDTO
 import com.infinum.academy.restserver.models.CarDTO
-import com.infinum.academy.restserver.repositories.Repository
+import com.infinum.academy.restserver.repositories.InMemoryRepository
 import com.infinum.academy.restserver.services.Service
 import io.mockk.every
 import io.mockk.mockk
@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class ServiceTest {
-    private val repository = mockk<Repository>()
+    private val repository = mockk<InMemoryRepository>()
     private lateinit var carService: Service
 
     @BeforeEach

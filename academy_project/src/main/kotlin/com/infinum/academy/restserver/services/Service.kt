@@ -1,32 +1,35 @@
 package com.infinum.academy.restserver.services
 
-import com.infinum.academy.restserver.models.Car
-import com.infinum.academy.restserver.models.CarCheckUp
-import com.infinum.academy.restserver.models.CarCheckUpDTO
-import com.infinum.academy.restserver.models.CarDTO
+import com.infinum.academy.restserver.models.*
+import com.infinum.academy.restserver.repositories.CarNotInRepository
 import com.infinum.academy.restserver.repositories.Repository
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
+import org.springframework.web.server.ResponseStatusException
 
 @Component
 class Service(
-    val carRepository: Repository
+    val carRepository: Repository<Long,Car>,
+    val carCheckUpRepository: Repository<Long,CarCheckUp>
 ) {
 
-    fun addCar(carDTO: CarDTO): Car? {
-        val car = Car(carDTO)
-        if (carRepository.addCar(car))
-            return car
-        return null
+    fun addCar(carDTO: CarDTO): Long {
+        return carRepository.save(carDTO.toDomainModel())
     }
 
-    fun getCar(id: Long): Car? {
-        return carRepository.getCar(id)
+    fun getCar(id: Long): Car {
+        return carRepository.findById(id)?.also {
+            it.carCheckUps.sortBy { carCheckUp -> carCheckUp.date }
+        } ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
     }
 
-    fun addCheckUp(carCheckUpDTO: CarCheckUpDTO): CarCheckUp? {
-        val carCheckUp = CarCheckUp(carCheckUpDTO)
-        if (carRepository.addCarCheckUp(carCheckUp))
-            return carCheckUp
-        return null
+    fun addCheckUp(carCheckUpDTO: CarCheckUpDTO): Long {
+        var id: Long
+        try {
+            id = carCheckUpRepository.save(carCheckUpDTO.toDomainModel())
+        }catch (exc: CarNotInRepository){
+            throw ResponseStatusException(HttpStatus.NOT_FOUND)
+        }
+        return id
     }
 }

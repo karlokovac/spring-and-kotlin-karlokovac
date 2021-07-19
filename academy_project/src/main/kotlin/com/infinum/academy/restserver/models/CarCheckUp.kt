@@ -10,11 +10,6 @@ data class CarCheckUp(
     val id: Long = generateUniqueCode(),
     val date: LocalDate = LocalDate.now()
 ) {
-    constructor(carCheckUpDTO: CarCheckUpDTO) : this(
-        carCheckUpDTO.workerName,
-        carCheckUpDTO.price,
-        carCheckUpDTO.carId
-    )
     companion object {
         var counter: Long = 1
         fun generateUniqueCode(): Long = counter++
@@ -26,3 +21,5 @@ data class CarCheckUpDTO(
     val price: Float,
     val carId: Long
 )
+
+fun CarCheckUpDTO.toDomainModel() = CarCheckUp( workerName, price, carId )
