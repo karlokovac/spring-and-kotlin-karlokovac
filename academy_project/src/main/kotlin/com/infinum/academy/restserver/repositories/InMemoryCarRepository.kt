@@ -13,6 +13,6 @@ class InMemoryCarRepository : Repository<Long, Car> {
     }
 
     override fun findById(id: Long): Car? {
-        return cars[id]?.also { it.carCheckUps.sortBy { carCheckUp -> carCheckUp.date } }
+        return cars[id]?.also { it.carCheckUps.sortByDescending { carCheckUp -> carCheckUp.date } }
     }
 }
