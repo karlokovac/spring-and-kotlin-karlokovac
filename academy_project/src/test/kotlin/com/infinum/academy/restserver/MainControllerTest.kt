@@ -12,10 +12,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
+import org.springframework.web.server.ResponseStatusException
 
 @WebMvcTest
 class MainControllerTest @Autowired constructor(
@@ -34,48 +36,44 @@ class MainControllerTest @Autowired constructor(
     @Test
     fun testAddingCar() {
         val carDTO = CarDTO(1L, "Ford", "Ka", 2010, 12345L)
-        val car = Car(carDTO)
 
         every {
-            carService.addCar(any())
-        } returns car
+            carService.addCar(carDTO)
+        } returns 1L
 
-        mvc.post("/addCar") {
+        mvc.post("/cars") {
             content = mapper.writeValueAsString(carDTO)
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { is2xxSuccessful() }
-            jsonPath("$.id") { value("1") }
         }
     }
 
     @Test
     fun testAddingCarCarCheckUp() {
         val carCheckUpDTO = CarCheckUpDTO("Ante Antic", 145f, 12345L)
-        val carCheckUp = CarCheckUp(carCheckUpDTO)
 
         every {
-            carService.addCheckUp(any())
-        } returns carCheckUp
+            carService.addCheckUp(carCheckUpDTO)
+        } returns 1L
 
-        mvc.post("/addCarCheckUp") {
+        mvc.post("/carCheckUps") {
             content = mapper.writeValueAsString(carCheckUpDTO)
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { is2xxSuccessful() }
-            jsonPath("$.id") { value("1") }
         }
     }
 
     @Test
-    fun testfetchingExistingCar() {
+    fun testFetchingExistingCar() {
         val car = Car(1L, "Ford", "Ka", 2010, 12345L, 1)
 
         every {
-            carService.getCar(any())
+            carService.getCar(1L)
         } returns car
 
-        mvc.get("/fetchCar?id=1").andExpect {
+        mvc.get("/cars/1").andExpect {
             status { is2xxSuccessful() }
             jsonPath("$.id") { value("1") }
             jsonPath("$.manufacturerName") { value("Ford") }
@@ -86,9 +84,9 @@ class MainControllerTest @Autowired constructor(
     fun testFetchingNonExistingCar() {
         every {
             carService.getCar(any())
-        } returns null
+        } throws ResponseStatusException(HttpStatus.NOT_FOUND)
 
-        mvc.get("/fetchCar?id=1").andExpect {
+        mvc.get("/cars/1").andExpect {
             status { is4xxClientError() }
         }
     }

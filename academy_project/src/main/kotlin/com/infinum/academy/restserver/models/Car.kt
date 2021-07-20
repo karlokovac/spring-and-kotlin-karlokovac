@@ -2,7 +2,7 @@ package com.infinum.academy.restserver.models
 
 import java.time.LocalDate
 
-data class Car (
+data class Car(
     val ownerId: Long,
     val manufacturerName: String,
     val modelName: String,
@@ -11,7 +11,7 @@ data class Car (
 
     val id: Long = generateUniqueCode(),
     val dateAdded: LocalDate = LocalDate.now(),
-    val carCheckUps: MutableList<CarCheckUp> = mutableListOf(),
+    val carCheckUps: MutableList<CarCheckUp> = mutableListOf()
 ) {
     companion object {
         var counter: Long = 1
@@ -27,4 +27,4 @@ data class CarDTO(
     val serialNumber: Long,
 )
 
-fun CarDTO.toDomainModel() = Car( ownerId, manufacturerName, modelName, productionYear, serialNumber )
+fun CarDTO.toDomainModel() = Car(ownerId, manufacturerName, modelName, productionYear, serialNumber)

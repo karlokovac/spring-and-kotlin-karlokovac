@@ -4,7 +4,7 @@ import com.infinum.academy.restserver.models.Car
 import org.springframework.stereotype.Component
 
 @Component
-class InMemoryCarRepository : Repository<Long,Car> {
+class InMemoryCarRepository : Repository<Long, Car> {
     private val cars = mutableMapOf<Long, Car>()
 
     override fun save(model: Car): Long {

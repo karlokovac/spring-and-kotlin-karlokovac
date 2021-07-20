@@ -23,7 +23,7 @@ class RestServerApplicationTests @Autowired constructor(
 
     @Test
     fun fetchNonExistingCar() {
-        mvc.get("/fetchCar?id=10345432")
+        mvc.get("/cars/10345432")
             .andExpect {
                 status { is4xxClientError() }
             }
@@ -31,26 +31,24 @@ class RestServerApplicationTests @Autowired constructor(
     @Test
     fun testAddingCar() {
         val carDTO = CarDTO(1L, "Audi", "R8", 2015, 123456789L)
-        mvc.post("/addCar") {
+        mvc.post("/cars") {
             content = mapper.writeValueAsString(carDTO)
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { is2xxSuccessful() }
-            jsonPath("$.manufacturerName") { value("Audi") }
         }
     }
 
     @Test
     fun fetchExistingCar() {
         val carDTO = CarDTO(1L, "Audi", "R8", 2015, 123456789L)
-        mvc.post("/addCar") {
+        mvc.post("/cars") {
             content = mapper.writeValueAsString(carDTO)
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { is2xxSuccessful() }
-            jsonPath("$.manufacturerName") { value("Audi") }
         }
-        mvc.get("/fetchCar?id=1")
+        mvc.get("/cars/1")
             .andExpect {
                 status { is2xxSuccessful() }
                 jsonPath("$.manufacturerName") { value("Audi") }
@@ -60,27 +58,25 @@ class RestServerApplicationTests @Autowired constructor(
     @Test
     fun testAddingCarCheckUp() {
         val carDTO = CarDTO(1L, "Audi", "R8", 2015, 123456789L)
-        mvc.post("/addCar") {
+        mvc.post("/cars") {
             content = mapper.writeValueAsString(carDTO)
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { is2xxSuccessful() }
-            jsonPath("$.manufacturerName") { value("Audi") }
         }
         val carCheckUpDTO = CarCheckUpDTO("Iva Ivić", 200f, 1)
-        mvc.post("/addCarCheckUp") {
+        mvc.post("/carCheckUps") {
             content = mapper.writeValueAsString(carCheckUpDTO)
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { is2xxSuccessful() }
-            jsonPath("$.workerName") { value("Iva Ivić") }
         }
     }
 
     @Test
     fun testAddingCarCheckUpToNonExistingCar() {
         val carCheckUpDTO = CarCheckUpDTO("Iva Ivić", 200f, 164689L)
-        mvc.post("/addCarCheckUp") {
+        mvc.post("/carCheckUps") {
             content = mapper.writeValueAsString(carCheckUpDTO)
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {

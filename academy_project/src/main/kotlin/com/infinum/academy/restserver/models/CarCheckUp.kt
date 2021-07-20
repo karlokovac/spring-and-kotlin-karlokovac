@@ -22,4 +22,4 @@ data class CarCheckUpDTO(
     val carId: Long
 )
 
-fun CarCheckUpDTO.toDomainModel() = CarCheckUp( workerName, price, carId )
+fun CarCheckUpDTO.toDomainModel() = CarCheckUp(workerName, price, carId)
