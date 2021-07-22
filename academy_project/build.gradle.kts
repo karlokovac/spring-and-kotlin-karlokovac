@@ -18,16 +18,30 @@ repositories {
     mavenCentral()
 }
 
+extra["testcontainersVersion"] = "1.15.3"
+
 dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-jdbc")
+    implementation("org.flywaydb:flyway-core")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
+    runtimeOnly("org.postgresql:postgresql")
+
     testImplementation("io.mockk:mockk:1.12.0")
     testImplementation("org.assertj:assertj-core:3.20.2")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("com.ninja-squad:springmockk:3.0.1")
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.testcontainers:postgresql")
+}
+
+dependencyManagement {
+    imports {
+        mavenBom("org.testcontainers:testcontainers-bom:${property("testcontainersVersion")}")
+    }
 }
 
 tasks.withType<KotlinCompile> {
@@ -36,6 +50,7 @@ tasks.withType<KotlinCompile> {
         jvmTarget = "11"
     }
 }
+
 tasks.test {
     finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
 }

@@ -1,25 +1,22 @@
 package com.infinum.academy.restserver.models
 
-import java.time.LocalDate
+import java.sql.Timestamp
+import java.time.LocalDateTime
+import java.time.Period
 
 data class CarCheckUp(
+    val id: Long,
     val workerName: String,
-    val price: Float,
+    val price: Double,
     val carId: Long,
 
-    val id: Long = generateUniqueCode(),
-    val date: LocalDate = LocalDate.now()
-) {
-    companion object {
-        var counter: Long = 1
-        fun generateUniqueCode(): Long = counter++
-    }
-}
+    val dateTime: LocalDateTime = LocalDateTime.now()
+)
 
 data class CarCheckUpDTO(
     val workerName: String,
-    val price: Float,
+    val price: Double,
     val carId: Long
 )
 
-fun CarCheckUpDTO.toDomainModel() = CarCheckUp(workerName, price, carId)
+fun CarCheckUpDTO.toDomainModel() = CarCheckUp(0,workerName, price, carId)

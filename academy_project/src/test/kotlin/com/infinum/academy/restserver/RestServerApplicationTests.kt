@@ -51,7 +51,6 @@ class RestServerApplicationTests @Autowired constructor(
         mvc.get("/cars/1")
             .andExpect {
                 status { is2xxSuccessful() }
-                jsonPath("$.manufacturerName") { value("Audi") }
             }
     }
 
@@ -64,7 +63,7 @@ class RestServerApplicationTests @Autowired constructor(
         }.andExpect {
             status { is2xxSuccessful() }
         }
-        val carCheckUpDTO = CarCheckUpDTO("Iva Ivić", 200f, 1)
+        val carCheckUpDTO = CarCheckUpDTO("Iva Ivić", 200.0, 1)
         mvc.post("/carCheckUps") {
             content = mapper.writeValueAsString(carCheckUpDTO)
             contentType = MediaType.APPLICATION_JSON
@@ -75,7 +74,7 @@ class RestServerApplicationTests @Autowired constructor(
 
     @Test
     fun testAddingCarCheckUpToNonExistingCar() {
-        val carCheckUpDTO = CarCheckUpDTO("Iva Ivić", 200f, 164689L)
+        val carCheckUpDTO = CarCheckUpDTO("Iva Ivić", 200.0, 164689L)
         mvc.post("/carCheckUps") {
             content = mapper.writeValueAsString(carCheckUpDTO)
             contentType = MediaType.APPLICATION_JSON

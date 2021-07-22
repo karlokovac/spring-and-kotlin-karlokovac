@@ -1,8 +1,8 @@
 package com.infinum.academy.restserver.controlers
 
-import com.infinum.academy.restserver.models.Car
 import com.infinum.academy.restserver.models.CarCheckUpDTO
 import com.infinum.academy.restserver.models.CarDTO
+import com.infinum.academy.restserver.models.CarWithCheckUps
 import com.infinum.academy.restserver.services.Service
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
@@ -24,8 +24,8 @@ class MainController(
     }
 
     @GetMapping("/cars/{carId}")
-    fun fetchCar(@PathVariable carId: Long): ResponseEntity<Car> {
-        return ResponseEntity.ok(carService.getCar(carId))
+    fun fetchCar(@PathVariable carId: Long): ResponseEntity<CarWithCheckUps> {
+        return ResponseEntity.ok(carService.getCarWithCheckUps(carId))
     }
 
     @PostMapping("/carCheckUps")
