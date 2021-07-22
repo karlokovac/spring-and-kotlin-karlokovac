@@ -48,7 +48,8 @@ class RestServerApplicationTests @Autowired constructor(
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { is2xxSuccessful() }
-        }.andReturn().response.contentAsString
+        }.andReturn().response.getHeaderValue("Location").toString()
+            .split("/")[2]
         mvc.get("/cars/${NumberInput.parseLong(receivedId)}")
             .andExpect {
                 status { is2xxSuccessful() }
@@ -63,7 +64,8 @@ class RestServerApplicationTests @Autowired constructor(
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { is2xxSuccessful() }
-        }.andReturn().response.contentAsString
+        }.andReturn().response.getHeaderValue("Location").toString()
+            .split("/")[2]
         val carCheckUpDTO = CarCheckUpDTO("Iva Ivić", 200.0, NumberInput.parseLong(receivedId))
         mvc.post("/carCheckUps") {
             content = mapper.writeValueAsString(carCheckUpDTO)

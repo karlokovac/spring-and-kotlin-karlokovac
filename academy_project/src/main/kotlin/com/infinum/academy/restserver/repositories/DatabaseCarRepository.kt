@@ -4,7 +4,6 @@ import com.infinum.academy.restserver.models.Car
 import org.springframework.dao.DataAccessException
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.HttpStatus
-import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert
 import org.springframework.stereotype.Repository
@@ -13,11 +12,10 @@ import javax.sql.DataSource
 
 @Repository
 class DatabaseCarRepository(
-    private val jdbcTemplate: JdbcTemplate,
     private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate,
     dataSource: DataSource
 ) : CarRepository {
-    private val simpleJdbcInsert = SimpleJdbcInsert( dataSource)
+    private val simpleJdbcInsert = SimpleJdbcInsert(dataSource)
         .withTableName("cars")
         .usingGeneratedKeyColumns("id")
 

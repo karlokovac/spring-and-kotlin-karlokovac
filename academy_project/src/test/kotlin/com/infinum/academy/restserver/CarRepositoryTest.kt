@@ -39,7 +39,7 @@ class CarRepositoryTest {
     }
 
     @Test
-    fun fetchFirstCar() {
+    fun fetchACar() {
         Assertions.assertThat(
             jdbcTemplate.queryForObject(
                 "SELECT DISTINCT manufacturername FROM cars WHERE ownerid = :oid AND modelname = :mn",
@@ -53,7 +53,7 @@ class CarRepositoryTest {
     }
 
     @Test
-    fun testFetchingTwoCars() {
+    fun testFetchingTwoCarsShouldException() {
         assertThatThrownBy {
             jdbcTemplate.queryForObject(
                 "SELECT name FROM cars WHERE manufacturername=:manname",

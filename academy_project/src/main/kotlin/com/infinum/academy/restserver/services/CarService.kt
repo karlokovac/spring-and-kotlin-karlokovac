@@ -3,14 +3,14 @@ package com.infinum.academy.restserver.services
 import com.infinum.academy.restserver.models.Car
 import com.infinum.academy.restserver.models.CarDTO
 import com.infinum.academy.restserver.models.toDomainModel
-import com.infinum.academy.restserver.repositories.DatabaseCarCheckUpRepository
+import com.infinum.academy.restserver.repositories.CarCheckUpRepository
 import com.infinum.academy.restserver.repositories.DatabaseCarRepository
 import org.springframework.stereotype.Component
 
 @Component
 class CarService(
     val carRepository: DatabaseCarRepository,
-    val carCheckUpRepository: DatabaseCarCheckUpRepository
+    val carCheckUpRepository: CarCheckUpRepository
 ) {
 
     fun addCar(carDTO: CarDTO): Long {

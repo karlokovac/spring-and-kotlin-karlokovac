@@ -1,12 +1,13 @@
 package com.infinum.academy.restserver
 
+import com.infinum.academy.restserver.models.Car
 import com.infinum.academy.restserver.models.CarCheckUpDTO
 import com.infinum.academy.restserver.models.CarDTO
-import com.infinum.academy.restserver.models.CarWithCheckUps
 import com.infinum.academy.restserver.models.toDomainModel
 import com.infinum.academy.restserver.repositories.DatabaseCarCheckUpRepository
 import com.infinum.academy.restserver.repositories.DatabaseCarRepository
-import com.infinum.academy.restserver.services.Service
+import com.infinum.academy.restserver.services.CarCheckUpService
+import com.infinum.academy.restserver.services.CarService
 import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
@@ -17,11 +18,13 @@ import java.time.LocalDate
 class ServiceTest {
     private val carRepository = mockk<DatabaseCarRepository>()
     private val carCheckUpRepository = mockk<DatabaseCarCheckUpRepository>()
-    private lateinit var carService: Service
+    private lateinit var carService: CarService
+    private lateinit var carCheckUpService: CarCheckUpService
 
     @BeforeEach
     fun setUp() {
-        carService = Service(carRepository, carCheckUpRepository)
+        carService = CarService(carRepository, carCheckUpRepository)
+        carCheckUpService = CarCheckUpService(carCheckUpRepository)
     }
 
     @Test
@@ -46,14 +49,14 @@ class ServiceTest {
             carCheckUpRepository.save(any())
         } returns 0
 
-        val actualId = carService.addCheckUp(passedCarCheckUpDTO)
+        val actualId = carCheckUpService.addCheckUp(passedCarCheckUpDTO)
 
         assertThat(actualId).isEqualTo(0L)
     }
 
     @Test
     fun testFetchingCar() {
-        val expectedCar = CarWithCheckUps(0L, 1L, LocalDate.EPOCH, "Ford", "Ka", 2010, 12345L)
+        val expectedCar = Car(0L, 1L, LocalDate.EPOCH, "Ford", "Ka", 2010, 12345L)
         every {
             carRepository.findById(0L)
         } returns expectedCar

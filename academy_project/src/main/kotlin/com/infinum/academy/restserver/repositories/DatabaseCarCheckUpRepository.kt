@@ -14,7 +14,7 @@ class DatabaseCarCheckUpRepository(
     private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate,
     dataSource: DataSource
 ) : CarCheckUpRepository {
-    private val simpleJdbcInsert = SimpleJdbcInsert( dataSource)
+    private val simpleJdbcInsert = SimpleJdbcInsert(dataSource)
         .withTableName("carcheckups")
         .usingGeneratedKeyColumns("id")
 
@@ -28,7 +28,7 @@ class DatabaseCarCheckUpRepository(
                     "datetime" to carCheckUp.dateTime
                 )
             ).toLong()
-        }catch (ex: DataIntegrityViolationException) {
+        } catch (ex: DataIntegrityViolationException) {
             println(ex.message)
             throw ResponseStatusException(HttpStatus.NOT_FOUND)
         }

@@ -1,8 +1,11 @@
 package com.infinum.academy.restserver
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.infinum.academy.restserver.models.Car
 import com.infinum.academy.restserver.models.CarCheckUpDTO
 import com.infinum.academy.restserver.models.CarDTO
+import com.infinum.academy.restserver.services.CarCheckUpService
+import com.infinum.academy.restserver.services.CarService
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import org.junit.jupiter.api.Test
@@ -22,7 +25,10 @@ class MainControllerTest @Autowired constructor(
     private val mapper: ObjectMapper
 ) {
     @MockkBean
-    lateinit var carService: Service
+    lateinit var carService: CarService
+
+    @MockkBean
+    lateinit var carCheckUpService: CarCheckUpService
 
     @Test
     fun testAddingCar() {
@@ -45,7 +51,7 @@ class MainControllerTest @Autowired constructor(
         val carCheckUpDTO = CarCheckUpDTO("Ante Antic", 145.0, 12345L)
 
         every {
-            carService.addCheckUp(carCheckUpDTO)
+            carCheckUpService.addCheckUp(carCheckUpDTO)
         } returns 1L
 
         mvc.post("/carCheckUps") {
@@ -58,7 +64,7 @@ class MainControllerTest @Autowired constructor(
 
     @Test
     fun testFetchingExistingCar() {
-        val car = CarWithCheckUps(1L, 1L, LocalDate.EPOCH, "Ford", "Ka", 2010, 12345L)
+        val car = Car(1L, 1L, LocalDate.EPOCH, "Ford", "Ka", 2010, 12345L)
 
         every {
             carService.getCarWithCheckUps(1L)
