@@ -1,8 +1,6 @@
 package com.infinum.academy.restserver.models
 
-import java.sql.Timestamp
 import java.time.LocalDateTime
-import java.time.Period
 
 data class CarCheckUp(
     val id: Long,
@@ -19,4 +17,4 @@ data class CarCheckUpDTO(
     val carId: Long
 )
 
-fun CarCheckUpDTO.toDomainModel() = CarCheckUp(0,workerName, price, carId)
+fun CarCheckUpDTO.toDomainModel() = CarCheckUp(0, workerName, price, carId)

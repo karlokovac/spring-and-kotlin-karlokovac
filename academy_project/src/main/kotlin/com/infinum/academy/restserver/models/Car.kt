@@ -23,8 +23,6 @@ data class CarWithCheckUps(
     var carCheckUps: List<CarCheckUp>? = null
 )
 
-
-
 data class CarDTO(
     val ownerId: Long,
     val manufacturerName: String,
@@ -33,5 +31,4 @@ data class CarDTO(
     val serialNumber: Long,
 )
 
-fun CarDTO.toDomainModel() = Car(0,ownerId, LocalDate.now(),manufacturerName, modelName, productionYear, serialNumber)
-
+fun CarDTO.toDomainModel() = Car(0, ownerId, LocalDate.now(), manufacturerName, modelName, productionYear, serialNumber)

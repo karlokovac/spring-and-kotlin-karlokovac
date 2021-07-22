@@ -2,9 +2,7 @@ package com.infinum.academy.restserver.repositories
 
 import com.infinum.academy.restserver.models.Car
 import com.infinum.academy.restserver.models.CarWithCheckUps
-import org.springframework.dao.DataAccessException
 import org.springframework.dao.EmptyResultDataAccessException
-import org.springframework.dao.IncorrectResultSizeDataAccessException
 import org.springframework.http.HttpStatus
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.queryForObject
@@ -13,26 +11,36 @@ import org.springframework.stereotype.Repository
 import org.springframework.web.server.ResponseStatusException
 import java.sql.Date
 
-const val CAR_INSERT_SQL = "INSERT INTO cars (id,ownerId,dateAdded,manufacturerName,modelName,productionYear,serialNumber)" +
-        " VALUES (DEFAULT,?,?,?,?,?,?)"
-
 @Repository
 class DatabaseCarRepository(
     private val jdbcTemplate: JdbcTemplate,
 ) {
+    companion object {
+        private const val CAR_INSERT_SQL = "INSERT INTO cars (id,ownerId,dateAdded,manufacturerName,modelName," +
+            "productionYear,serialNumber) VALUES (DEFAULT,?,?,?,?,?,?)"
+        private const val ownerid_index = 1
+        private const val dateAdded_index = 2
+        private const val manufacturerName_index = 3
+        private const val modelName_index = 4
+        private const val productionYear_index = 5
+        private const val serialNumber_index = 6
+    }
 
     fun save(car: Car): Long {
         val keyHolder = GeneratedKeyHolder()
-        jdbcTemplate.update({
-            it.prepareStatement (CAR_INSERT_SQL, arrayOf("id")).apply {
-                setLong(1, car.ownerId)
-                setDate(2, Date.valueOf(car.dateAdded) )
-                setString(3, car.manufacturerName)
-                setString(4, car.modelName)
-                setInt(5, car.productionYear)
-                setLong(6,car.serialNumber)
-            }
-        },keyHolder)
+        jdbcTemplate.update(
+            {
+                it.prepareStatement(CAR_INSERT_SQL, arrayOf("id")).apply {
+                    setLong(ownerid_index, car.ownerId)
+                    setDate(dateAdded_index, Date.valueOf(car.dateAdded))
+                    setString(manufacturerName_index, car.manufacturerName)
+                    setString(modelName_index, car.modelName)
+                    setInt(productionYear_index, car.productionYear)
+                    setLong(serialNumber_index, car.serialNumber)
+                }
+            },
+            keyHolder
+        )
         return keyHolder.key as Long? ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST)
     }
 
@@ -43,13 +51,14 @@ class DatabaseCarRepository(
                 args = arrayOf(id),
                 function = { rs, _ ->
                     CarWithCheckUps(
-                        rs.getLong("id") ,rs.getLong("ownerId"),rs.getDate("dateAdded").toLocalDate(),
-                        rs.getString("manufacturerName"),rs.getString("modelName"),
-                        rs.getInt("productionYear"),rs.getLong("serialNumber")
+                        rs.getLong("id"), rs.getLong("ownerId"), rs.getDate("dateAdded").toLocalDate(),
+                        rs.getString("manufacturerName"), rs.getString("modelName"),
+                        rs.getInt("productionYear"), rs.getLong("serialNumber")
                     )
                 }
             )
-        }catch (ex: DataAccessException) {
+        } catch (ex: EmptyResultDataAccessException) {
+            println(ex.message)
             throw ResponseStatusException(HttpStatus.NOT_FOUND)
         }
     }

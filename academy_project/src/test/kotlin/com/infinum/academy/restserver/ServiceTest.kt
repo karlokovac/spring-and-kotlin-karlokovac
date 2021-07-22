@@ -1,6 +1,9 @@
 package com.infinum.academy.restserver
 
-import com.infinum.academy.restserver.models.*
+import com.infinum.academy.restserver.models.CarCheckUpDTO
+import com.infinum.academy.restserver.models.CarDTO
+import com.infinum.academy.restserver.models.CarWithCheckUps
+import com.infinum.academy.restserver.models.toDomainModel
 import com.infinum.academy.restserver.repositories.DatabaseCarCheckUpRepository
 import com.infinum.academy.restserver.repositories.DatabaseCarRepository
 import com.infinum.academy.restserver.services.Service
@@ -10,7 +13,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 class ServiceTest {
     private val carRepository = mockk<DatabaseCarRepository>()
@@ -44,7 +46,6 @@ class ServiceTest {
             carCheckUpRepository.save(any())
         } returns 0
 
-
         val actualId = carService.addCheckUp(passedCarCheckUpDTO)
 
         assertThat(actualId).isEqualTo(0L)
@@ -52,7 +53,7 @@ class ServiceTest {
 
     @Test
     fun testFetchingCar() {
-        val expectedCar = CarWithCheckUps(0L,1L, LocalDate.EPOCH,"Ford", "Ka", 2010, 12345L)
+        val expectedCar = CarWithCheckUps(0L, 1L, LocalDate.EPOCH, "Ford", "Ka", 2010, 12345L)
         every {
             carRepository.findById(0L)
         } returns expectedCar

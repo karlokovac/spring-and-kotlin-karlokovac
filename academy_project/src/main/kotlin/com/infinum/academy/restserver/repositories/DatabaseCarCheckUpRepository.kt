@@ -10,28 +10,36 @@ import org.springframework.stereotype.Repository
 import org.springframework.web.server.ResponseStatusException
 import java.sql.Timestamp
 
-const val CARCHECKUP_INSERT_SQL =
-    "INSERT INTO carCheckUps (id,workername,price,carid,datetime) VALUES (DEFAULT,?,?,?,?)"
-
-
 @Repository
 class DatabaseCarCheckUpRepository(
     private val jdbcTemplate: JdbcTemplate
 ) {
+    companion object {
+        private const val CARCHECKUP_INSERT_SQL =
+            "INSERT INTO carCheckUps (id,workername,price,carid,datetime) VALUES (DEFAULT,?,?,?,?)"
+        private const val workerName_index = 1
+        private const val price_index = 2
+        private const val carid_index = 3
+        private const val dateTime_index = 4
+    }
 
     fun save(carCheckUp: CarCheckUp): Long {
         return try {
             val keyHolder = GeneratedKeyHolder()
-            jdbcTemplate.update({
-                it.prepareStatement(CARCHECKUP_INSERT_SQL, arrayOf("id")).apply {
-                    setString(1, carCheckUp.workerName)
-                    setDouble(2, carCheckUp.price)
-                    setLong(3, carCheckUp.carId)
-                    setTimestamp(4, Timestamp.valueOf(carCheckUp.dateTime))
-                }
-            }, keyHolder)
+            jdbcTemplate.update(
+                {
+                    it.prepareStatement(CARCHECKUP_INSERT_SQL, arrayOf("id")).apply {
+                        setString(workerName_index, carCheckUp.workerName)
+                        setDouble(price_index, carCheckUp.price)
+                        setLong(carid_index, carCheckUp.carId)
+                        setTimestamp(dateTime_index, Timestamp.valueOf(carCheckUp.dateTime))
+                    }
+                },
+                keyHolder
+            )
             keyHolder.key as Long? ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST)
-        }catch (ex: DataIntegrityViolationException){
+        } catch (ex: DataIntegrityViolationException) {
+            println(ex.message)
             throw ResponseStatusException(HttpStatus.NOT_FOUND)
         }
     }
@@ -49,6 +57,7 @@ class DatabaseCarCheckUpRepository(
                     )
                 }.sortedByDescending { carCheckUp -> carCheckUp.dateTime }
         } catch (ex: EmptyResultDataAccessException) {
+            println(ex.message)
             emptyList()
         }
     }

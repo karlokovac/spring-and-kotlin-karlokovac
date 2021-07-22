@@ -1,5 +1,6 @@
 package com.infinum.academy.restserver
 
+import com.fasterxml.jackson.core.io.NumberInput
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.infinum.academy.restserver.models.CarCheckUpDTO
 import com.infinum.academy.restserver.models.CarDTO
@@ -42,13 +43,13 @@ class RestServerApplicationTests @Autowired constructor(
     @Test
     fun fetchExistingCar() {
         val carDTO = CarDTO(1L, "Audi", "R8", 2015, 123456789L)
-        mvc.post("/cars") {
+        val receivedId = mvc.post("/cars") {
             content = mapper.writeValueAsString(carDTO)
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { is2xxSuccessful() }
-        }
-        mvc.get("/cars/1")
+        }.andReturn().response.contentAsString
+        mvc.get("/cars/${NumberInput.parseLong(receivedId)}")
             .andExpect {
                 status { is2xxSuccessful() }
             }
@@ -57,13 +58,13 @@ class RestServerApplicationTests @Autowired constructor(
     @Test
     fun testAddingCarCheckUp() {
         val carDTO = CarDTO(1L, "Audi", "R8", 2015, 123456789L)
-        mvc.post("/cars") {
+        val receivedId = mvc.post("/cars") {
             content = mapper.writeValueAsString(carDTO)
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { is2xxSuccessful() }
-        }
-        val carCheckUpDTO = CarCheckUpDTO("Iva Ivić", 200.0, 1)
+        }.andReturn().response.contentAsString
+        val carCheckUpDTO = CarCheckUpDTO("Iva Ivić", 200.0, NumberInput.parseLong(receivedId))
         mvc.post("/carCheckUps") {
             content = mapper.writeValueAsString(carCheckUpDTO)
             contentType = MediaType.APPLICATION_JSON

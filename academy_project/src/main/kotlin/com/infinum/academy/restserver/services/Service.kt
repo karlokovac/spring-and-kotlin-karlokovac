@@ -1,11 +1,12 @@
 package com.infinum.academy.restserver.services
 
-import com.infinum.academy.restserver.models.*
+import com.infinum.academy.restserver.models.CarCheckUpDTO
+import com.infinum.academy.restserver.models.CarDTO
+import com.infinum.academy.restserver.models.CarWithCheckUps
+import com.infinum.academy.restserver.models.toDomainModel
 import com.infinum.academy.restserver.repositories.DatabaseCarCheckUpRepository
 import com.infinum.academy.restserver.repositories.DatabaseCarRepository
-import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
-import org.springframework.web.server.ResponseStatusException
 
 @Component
 class Service(
