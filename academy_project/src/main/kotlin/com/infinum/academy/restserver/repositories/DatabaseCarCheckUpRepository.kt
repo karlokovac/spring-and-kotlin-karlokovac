@@ -13,7 +13,7 @@ import java.sql.Timestamp
 @Repository
 class DatabaseCarCheckUpRepository(
     private val jdbcTemplate: JdbcTemplate
-) {
+) : CarCheckUpRepository {
     companion object {
         private const val CARCHECKUP_INSERT_SQL =
             "INSERT INTO carCheckUps (id,workername,price,carid,datetime) VALUES (DEFAULT,?,?,?,?)"
@@ -23,7 +23,7 @@ class DatabaseCarCheckUpRepository(
         private const val dateTime_index = 4
     }
 
-    fun save(carCheckUp: CarCheckUp): Long {
+    override fun save(carCheckUp: CarCheckUp): Long {
         return try {
             val keyHolder = GeneratedKeyHolder()
             jdbcTemplate.update(
@@ -44,7 +44,7 @@ class DatabaseCarCheckUpRepository(
         }
     }
 
-    fun findAllByCarId(id: Long): List<CarCheckUp> {
+    override fun findAllByCarId(id: Long): List<CarCheckUp> {
         return try {
             jdbcTemplate.queryForList("SELECT * FROM carcheckups WHERE carid = ?", id)
                 .map { row ->

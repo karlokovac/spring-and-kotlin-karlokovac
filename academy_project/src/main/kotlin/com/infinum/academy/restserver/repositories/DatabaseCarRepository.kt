@@ -1,7 +1,6 @@
 package com.infinum.academy.restserver.repositories
 
 import com.infinum.academy.restserver.models.Car
-import com.infinum.academy.restserver.models.CarWithCheckUps
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.HttpStatus
 import org.springframework.jdbc.core.JdbcTemplate
@@ -14,7 +13,7 @@ import java.sql.Date
 @Repository
 class DatabaseCarRepository(
     private val jdbcTemplate: JdbcTemplate,
-) {
+) : CarRepository {
     companion object {
         private const val CAR_INSERT_SQL = "INSERT INTO cars (id,ownerId,dateAdded,manufacturerName,modelName," +
             "productionYear,serialNumber) VALUES (DEFAULT,?,?,?,?,?,?)"
@@ -26,7 +25,7 @@ class DatabaseCarRepository(
         private const val serialNumber_index = 6
     }
 
-    fun save(car: Car): Long {
+    override fun save(car: Car): Long {
         val keyHolder = GeneratedKeyHolder()
         jdbcTemplate.update(
             {
@@ -44,13 +43,13 @@ class DatabaseCarRepository(
         return keyHolder.key as Long? ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST)
     }
 
-    fun findById(id: Long): CarWithCheckUps {
+    override fun findById(id: Long): Car {
         try {
             return jdbcTemplate.queryForObject(
                 sql = "SELECT * FROM cars WHERE id = ?",
                 args = arrayOf(id),
                 function = { rs, _ ->
-                    CarWithCheckUps(
+                    Car(
                         rs.getLong("id"), rs.getLong("ownerId"), rs.getDate("dateAdded").toLocalDate(),
                         rs.getString("manufacturerName"), rs.getString("modelName"),
                         rs.getInt("productionYear"), rs.getLong("serialNumber")

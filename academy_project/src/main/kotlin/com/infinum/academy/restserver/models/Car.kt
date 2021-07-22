@@ -10,17 +10,7 @@ data class Car(
     val modelName: String,
     val productionYear: Int,
     val serialNumber: Long,
-)
-
-data class CarWithCheckUps(
-    val id: Long,
-    val ownerId: Long,
-    val dateAdded: LocalDate,
-    val manufacturerName: String,
-    val modelName: String,
-    val productionYear: Int,
-    val serialNumber: Long,
-    var carCheckUps: List<CarCheckUp>? = null
+    val carCheckUps: List<CarCheckUp> = emptyList()
 )
 
 data class CarDTO(

@@ -3,8 +3,6 @@ package com.infinum.academy.restserver
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.infinum.academy.restserver.models.CarCheckUpDTO
 import com.infinum.academy.restserver.models.CarDTO
-import com.infinum.academy.restserver.models.CarWithCheckUps
-import com.infinum.academy.restserver.services.Service
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import org.junit.jupiter.api.Test
