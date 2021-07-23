@@ -14,9 +14,9 @@ import java.net.URI
 class CarCheckUpController(
     private val carCheckUpService: CarCheckUpService
 ) {
-    @PostMapping("")
+    @PostMapping()
     fun addCarCheckUp(@RequestBody carCheckUpDTO: CarCheckUpDTO): ResponseEntity<Unit> {
         val id = carCheckUpService.addCheckUp(carCheckUpDTO)
-        return ResponseEntity.created(URI.create("/cars/$id")).build()
+        return ResponseEntity.created(URI.create("/carCheckUps/$id")).build()
     }
 }

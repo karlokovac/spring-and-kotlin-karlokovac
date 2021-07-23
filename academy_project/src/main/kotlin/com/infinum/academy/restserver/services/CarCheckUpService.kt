@@ -3,9 +3,9 @@ package com.infinum.academy.restserver.services
 import com.infinum.academy.restserver.models.CarCheckUpDTO
 import com.infinum.academy.restserver.models.toDomainModel
 import com.infinum.academy.restserver.repositories.CarCheckUpRepository
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
-@Component
+@Service
 class CarCheckUpService(
     val carCheckUpRepository: CarCheckUpRepository
 ) {

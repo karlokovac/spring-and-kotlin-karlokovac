@@ -8,14 +8,12 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert
 import org.springframework.stereotype.Repository
 import org.springframework.web.server.ResponseStatusException
-import javax.sql.DataSource
 
 @Repository
 class DatabaseCarRepository(
     private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate,
-    dataSource: DataSource
 ) : CarRepository {
-    private val simpleJdbcInsert = SimpleJdbcInsert(dataSource)
+    private val simpleJdbcInsert = SimpleJdbcInsert(namedParameterJdbcTemplate.jdbcTemplate)
         .withTableName("cars")
         .usingGeneratedKeyColumns("id")
 
@@ -39,9 +37,9 @@ class DatabaseCarRepository(
                 mapOf("id" to id)
             ) { rs, _ ->
                 Car(
-                    rs.getLong("id"), rs.getLong("ownerId"), rs.getDate("dateAdded").toLocalDate(),
+                    rs.getLong("ownerId"), rs.getDate("dateAdded").toLocalDate(),
                     rs.getString("manufacturerName"), rs.getString("modelName"),
-                    rs.getInt("productionYear"), rs.getLong("serialNumber")
+                    rs.getInt("productionYear"), rs.getLong("serialNumber"), rs.getLong("id")
                 )
             } ?: throw EmptyResultDataAccessException(1)
         } catch (ex: DataAccessException) {

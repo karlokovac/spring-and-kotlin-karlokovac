@@ -8,6 +8,7 @@ plugins {
     jacoco
     id("io.gitlab.arturbosch.detekt").version("1.18.0-RC2")
     id("org.jlleitschuh.gradle.ktlint").version("10.1.0")
+    id("org.unbroken-dome.test-sets") version "4.0.0"
 }
 
 group = "com.infinum.academy"
@@ -19,6 +20,10 @@ repositories {
 }
 
 extra["testcontainersVersion"] = "1.15.3"
+
+testSets {
+    val integrationTest by creating { dirName = "integrationTest" }
+}
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
@@ -32,8 +37,8 @@ dependencies {
 
     testImplementation("io.mockk:mockk:1.12.0")
     testImplementation("org.assertj:assertj-core:3.20.2")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("com.ninja-squad:springmockk:3.0.1")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
 }

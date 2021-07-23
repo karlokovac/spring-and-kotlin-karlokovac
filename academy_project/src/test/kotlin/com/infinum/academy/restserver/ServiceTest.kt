@@ -56,7 +56,7 @@ class ServiceTest {
 
     @Test
     fun testFetchingCar() {
-        val expectedCar = Car(0L, 1L, LocalDate.EPOCH, "Ford", "Ka", 2010, 12345L)
+        val expectedCar = Car(1L, LocalDate.EPOCH, "Ford", "Ka", 2010, 12345L, 0)
         every {
             carRepository.findById(0L)
         } returns expectedCar

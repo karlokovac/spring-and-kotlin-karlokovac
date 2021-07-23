@@ -1,7 +1,6 @@
-package com.infinum.academy.restserver
-
 import com.fasterxml.jackson.core.io.NumberInput
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.infinum.academy.restserver.RestServerApplication
 import com.infinum.academy.restserver.models.CarCheckUpDTO
 import com.infinum.academy.restserver.models.CarDTO
 import org.junit.jupiter.api.Test
@@ -13,7 +12,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 
-@SpringBootTest
+@SpringBootTest(classes = [RestServerApplication::class])
 @AutoConfigureMockMvc
 class RestServerApplicationTests @Autowired constructor(
     private val mapper: ObjectMapper

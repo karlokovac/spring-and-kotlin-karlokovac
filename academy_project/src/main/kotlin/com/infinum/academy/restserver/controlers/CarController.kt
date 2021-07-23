@@ -18,7 +18,7 @@ class CarController(
     private val carService: CarService
 ) {
 
-    @PostMapping("")
+    @PostMapping()
     fun addCar(@RequestBody carDTO: CarDTO): ResponseEntity<Unit> {
         val id = carService.addCar(carDTO)
         return ResponseEntity.created(URI.create("/cars/$id")).build()

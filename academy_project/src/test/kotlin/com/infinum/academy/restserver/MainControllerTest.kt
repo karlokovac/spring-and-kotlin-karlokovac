@@ -64,7 +64,7 @@ class MainControllerTest @Autowired constructor(
 
     @Test
     fun testFetchingExistingCar() {
-        val car = Car(1L, 1L, LocalDate.EPOCH, "Ford", "Ka", 2010, 12345L)
+        val car = Car(1L, LocalDate.EPOCH, "Ford", "Ka", 2010, 12345L, 1L)
 
         every {
             carService.getCarWithCheckUps(1L)

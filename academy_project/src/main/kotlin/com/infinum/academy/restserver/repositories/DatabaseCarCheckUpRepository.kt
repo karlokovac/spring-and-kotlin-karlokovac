@@ -7,14 +7,12 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert
 import org.springframework.stereotype.Repository
 import org.springframework.web.server.ResponseStatusException
-import javax.sql.DataSource
 
 @Repository
 class DatabaseCarCheckUpRepository(
     private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate,
-    dataSource: DataSource
 ) : CarCheckUpRepository {
-    private val simpleJdbcInsert = SimpleJdbcInsert(dataSource)
+    private val simpleJdbcInsert = SimpleJdbcInsert(namedParameterJdbcTemplate.jdbcTemplate)
         .withTableName("carcheckups")
         .usingGeneratedKeyColumns("id")
 
@@ -40,10 +38,10 @@ class DatabaseCarCheckUpRepository(
             mapOf("carid" to id)
         ) { rs, _ ->
             CarCheckUp(
-                rs.getLong("id"),
                 rs.getString("workername"),
                 rs.getDouble("price"),
                 rs.getLong("carid"),
+                rs.getLong("id"),
                 rs.getTimestamp("datetime").toLocalDateTime()
             )
         }
