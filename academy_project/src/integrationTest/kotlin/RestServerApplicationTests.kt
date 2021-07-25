@@ -1,8 +1,9 @@
+package com.infinum.academy.restserver
+
 import com.fasterxml.jackson.core.io.NumberInput
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.infinum.academy.restserver.RestServerApplication
-import com.infinum.academy.restserver.models.CarCheckUpDTO
-import com.infinum.academy.restserver.models.CarDTO
+import com.infinum.academy.restserver.models.AddCarCheckUpDTO
+import com.infinum.academy.restserver.models.AddCarDTO
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -22,15 +23,15 @@ class RestServerApplicationTests @Autowired constructor(
     lateinit var mvc: MockMvc
 
     @Test
-    fun fetchNonExistingCar() {
+    fun fetchNonExistingCarShouldError() {
         mvc.get("/cars/10345432")
             .andExpect {
                 status { is4xxClientError() }
             }
     }
     @Test
-    fun testAddingCar() {
-        val carDTO = CarDTO(1L, "Audi", "R8", 2015, 123456789L)
+    fun canAddCar() {
+        val carDTO = AddCarDTO(1L, "Audi", "R8", 2015, 1)
         mvc.post("/cars") {
             content = mapper.writeValueAsString(carDTO)
             contentType = MediaType.APPLICATION_JSON
@@ -41,14 +42,14 @@ class RestServerApplicationTests @Autowired constructor(
 
     @Test
     fun fetchExistingCar() {
-        val carDTO = CarDTO(1L, "Audi", "R8", 2015, 123456789L)
+        val carDTO = AddCarDTO(1L, "Audi", "R8", 2015, 2)
         val receivedId = mvc.post("/cars") {
             content = mapper.writeValueAsString(carDTO)
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { is2xxSuccessful() }
         }.andReturn().response.getHeaderValue("Location").toString()
-            .split("/")[2]
+            .split("/")[4]
         mvc.get("/cars/${NumberInput.parseLong(receivedId)}")
             .andExpect {
                 status { is2xxSuccessful() }
@@ -57,15 +58,15 @@ class RestServerApplicationTests @Autowired constructor(
 
     @Test
     fun testAddingCarCheckUp() {
-        val carDTO = CarDTO(1L, "Audi", "R8", 2015, 123456789L)
+        val carDTO = AddCarDTO(1L, "Audi", "R8", 2015, 3)
         val receivedId = mvc.post("/cars") {
             content = mapper.writeValueAsString(carDTO)
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { is2xxSuccessful() }
         }.andReturn().response.getHeaderValue("Location").toString()
-            .split("/")[2]
-        val carCheckUpDTO = CarCheckUpDTO("Iva Ivić", 200.0, NumberInput.parseLong(receivedId))
+            .split("/")[4]
+        val carCheckUpDTO = AddCarCheckUpDTO("Iva Ivić", 200.0, NumberInput.parseLong(receivedId))
         mvc.post("/carCheckUps") {
             content = mapper.writeValueAsString(carCheckUpDTO)
             contentType = MediaType.APPLICATION_JSON
@@ -76,12 +77,28 @@ class RestServerApplicationTests @Autowired constructor(
 
     @Test
     fun testAddingCarCheckUpToNonExistingCar() {
-        val carCheckUpDTO = CarCheckUpDTO("Iva Ivić", 200.0, 164689L)
+        val carCheckUpDTO = AddCarCheckUpDTO("Iva Ivić", 200.0, 164689L)
         mvc.post("/carCheckUps") {
             content = mapper.writeValueAsString(carCheckUpDTO)
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { is4xxClientError() }
+        }
+    }
+
+    @Test
+    fun fetchAllCarsPage() {
+        mvc.get("/cars").andExpect {
+            status { is2xxSuccessful() }
+            jsonPath("$.numberOfElements") { value("3") }
+        }
+    }
+
+    @Test
+    fun fetchAllCarCheckUpsPage() {
+        mvc.get("/carCheckUps/3").andExpect {
+            status { is2xxSuccessful() }
+            jsonPath("$.numberOfElements") { value("1") }
         }
     }
 }

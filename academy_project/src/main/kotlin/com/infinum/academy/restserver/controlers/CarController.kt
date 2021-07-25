@@ -1,8 +1,8 @@
 package com.infinum.academy.restserver.controlers
 
-import com.infinum.academy.restserver.models.Car
-import com.infinum.academy.restserver.models.CarDTO
+import com.infinum.academy.restserver.models.AddCarDTO
 import com.infinum.academy.restserver.services.CarService
+import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
@@ -19,13 +19,16 @@ class CarController(
 ) {
 
     @PostMapping()
-    fun addCar(@RequestBody carDTO: CarDTO): ResponseEntity<Unit> {
+    fun addCar(@RequestBody carDTO: AddCarDTO): ResponseEntity<Unit> {
         val id = carService.addCar(carDTO)
-        return ResponseEntity.created(URI.create("/cars/$id")).build()
+        return ResponseEntity.created(URI.create("http://localhost:8080/cars/$id")).build()
     }
 
+    @GetMapping()
+    fun getAllCars(pageable: Pageable) =
+        ResponseEntity.ok(carService.getAllCars(pageable))
+
     @GetMapping("/{carId}")
-    fun fetchCar(@PathVariable carId: Long): ResponseEntity<Car> {
-        return ResponseEntity.ok(carService.getCarWithCheckUps(carId))
-    }
+    fun fetchCar(@PathVariable carId: Long) =
+        ResponseEntity.ok(carService.getCar(carId))
 }

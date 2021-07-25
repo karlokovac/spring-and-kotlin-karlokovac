@@ -1,9 +1,9 @@
 package com.infinum.academy.restserver
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.infinum.academy.restserver.models.AddCarCheckUpDTO
+import com.infinum.academy.restserver.models.AddCarDTO
 import com.infinum.academy.restserver.models.Car
-import com.infinum.academy.restserver.models.CarCheckUpDTO
-import com.infinum.academy.restserver.models.CarDTO
 import com.infinum.academy.restserver.services.CarCheckUpService
 import com.infinum.academy.restserver.services.CarService
 import com.ninjasquad.springmockk.MockkBean
@@ -11,6 +11,7 @@ import io.mockk.every
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
@@ -32,7 +33,7 @@ class MainControllerTest @Autowired constructor(
 
     @Test
     fun testAddingCar() {
-        val carDTO = CarDTO(1L, "Ford", "Ka", 2010, 12345L)
+        val carDTO = AddCarDTO(1L, "Ford", "Ka", 2010, 12345L)
 
         every {
             carService.addCar(carDTO)
@@ -48,7 +49,7 @@ class MainControllerTest @Autowired constructor(
 
     @Test
     fun testAddingCarCarCheckUp() {
-        val carCheckUpDTO = CarCheckUpDTO("Ante Antic", 145.0, 12345L)
+        val carCheckUpDTO = AddCarCheckUpDTO("Ante Antic", 145.0, 12345L)
 
         every {
             carCheckUpService.addCheckUp(carCheckUpDTO)
@@ -67,7 +68,7 @@ class MainControllerTest @Autowired constructor(
         val car = Car(1L, LocalDate.EPOCH, "Ford", "Ka", 2010, 12345L, 1L)
 
         every {
-            carService.getCarWithCheckUps(1L)
+            carService.getCar(1L)
         } returns car
 
         mvc.get("/cars/1").andExpect {
@@ -80,11 +81,24 @@ class MainControllerTest @Autowired constructor(
     @Test
     fun testFetchingNonExistingCar() {
         every {
-            carService.getCarWithCheckUps(any())
+            carService.getCar(any())
         } throws ResponseStatusException(HttpStatus.NOT_FOUND)
 
         mvc.get("/cars/1").andExpect {
             status { is4xxClientError() }
+        }
+    }
+
+    @Test
+    fun testFetchingAllCarsPage() {
+        val page = Page.empty<Car>()
+        every {
+            carService.getAllCars(any())
+        } returns page
+
+        mvc.get("/cars").andExpect {
+            status { is2xxSuccessful() }
+            jsonPath("$.empty") { value("true") }
         }
     }
 }
