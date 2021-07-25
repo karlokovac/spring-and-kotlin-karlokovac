@@ -1,0 +1,28 @@
+package com.infinum.academy.restserver.repositories
+
+import com.infinum.academy.restserver.models.Car
+import com.infinum.academy.restserver.models.CarCheckUp
+import org.springframework.http.HttpStatus
+import org.springframework.stereotype.Component
+import org.springframework.web.server.ResponseStatusException
+
+@Component
+class InMemoryCarCheckupRepository(
+    private val carRepository: Repository<Long, Car>
+) : Repository<Long, CarCheckUp> {
+    private val carCheckUps = mutableMapOf<Long, CarCheckUp>()
+
+    override fun save(model: CarCheckUp): Long {
+        carRepository.findById(model.carId)?.also {
+            it.carCheckUps.add(model)
+        } ?: throw CarNotInRepository()
+        carCheckUps[model.id] = model
+        return model.id
+    }
+
+    override fun findById(id: Long): CarCheckUp? {
+        return carCheckUps[id]
+    }
+}
+
+class CarNotInRepository : ResponseStatusException(HttpStatus.NOT_FOUND)
