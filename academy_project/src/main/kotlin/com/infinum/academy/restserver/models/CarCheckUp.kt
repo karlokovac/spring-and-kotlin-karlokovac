@@ -1,24 +1,18 @@
 package com.infinum.academy.restserver.models
 
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class CarCheckUp(
     val workerName: String,
-    val price: Float,
+    val price: Double,
     val carId: Long,
-
-    val id: Long = generateUniqueCode(),
-    val date: LocalDate = LocalDate.now()
-) {
-    companion object {
-        var counter: Long = 1
-        fun generateUniqueCode(): Long = counter++
-    }
-}
+    val id: Long = 0,
+    val dateTime: LocalDateTime = LocalDateTime.now()
+)
 
 data class CarCheckUpDTO(
     val workerName: String,
-    val price: Float,
+    val price: Double,
     val carId: Long
 )
 

@@ -4,20 +4,14 @@ import java.time.LocalDate
 
 data class Car(
     val ownerId: Long,
+    val dateAdded: LocalDate,
     val manufacturerName: String,
     val modelName: String,
     val productionYear: Int,
     val serialNumber: Long,
-
-    val id: Long = generateUniqueCode(),
-    val dateAdded: LocalDate = LocalDate.now(),
-    val carCheckUps: MutableList<CarCheckUp> = mutableListOf()
-) {
-    companion object {
-        var counter: Long = 1
-        fun generateUniqueCode(): Long = counter++
-    }
-}
+    val id: Long = 0,
+    val carCheckUps: List<CarCheckUp> = emptyList()
+)
 
 data class CarDTO(
     val ownerId: Long,
@@ -27,4 +21,4 @@ data class CarDTO(
     val serialNumber: Long,
 )
 
-fun CarDTO.toDomainModel() = Car(ownerId, manufacturerName, modelName, productionYear, serialNumber)
+fun CarDTO.toDomainModel() = Car(ownerId, LocalDate.now(), manufacturerName, modelName, productionYear, serialNumber)

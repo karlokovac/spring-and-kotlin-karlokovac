@@ -2,13 +2,12 @@ package com.infinum.academy.restserver
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.infinum.academy.restserver.models.Car
-import com.infinum.academy.restserver.models.CarCheckUp
 import com.infinum.academy.restserver.models.CarCheckUpDTO
 import com.infinum.academy.restserver.models.CarDTO
-import com.infinum.academy.restserver.services.Service
+import com.infinum.academy.restserver.services.CarCheckUpService
+import com.infinum.academy.restserver.services.CarService
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -18,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 import org.springframework.web.server.ResponseStatusException
+import java.time.LocalDate
 
 @WebMvcTest
 class MainControllerTest @Autowired constructor(
@@ -25,13 +25,10 @@ class MainControllerTest @Autowired constructor(
     private val mapper: ObjectMapper
 ) {
     @MockkBean
-    lateinit var carService: Service
+    lateinit var carService: CarService
 
-    @BeforeEach
-    fun setUp() {
-        Car.counter = 1
-        CarCheckUp.counter = 1
-    }
+    @MockkBean
+    lateinit var carCheckUpService: CarCheckUpService
 
     @Test
     fun testAddingCar() {
@@ -51,10 +48,10 @@ class MainControllerTest @Autowired constructor(
 
     @Test
     fun testAddingCarCarCheckUp() {
-        val carCheckUpDTO = CarCheckUpDTO("Ante Antic", 145f, 12345L)
+        val carCheckUpDTO = CarCheckUpDTO("Ante Antic", 145.0, 12345L)
 
         every {
-            carService.addCheckUp(carCheckUpDTO)
+            carCheckUpService.addCheckUp(carCheckUpDTO)
         } returns 1L
 
         mvc.post("/carCheckUps") {
@@ -67,10 +64,10 @@ class MainControllerTest @Autowired constructor(
 
     @Test
     fun testFetchingExistingCar() {
-        val car = Car(1L, "Ford", "Ka", 2010, 12345L, 1)
+        val car = Car(1L, LocalDate.EPOCH, "Ford", "Ka", 2010, 12345L, 1L)
 
         every {
-            carService.getCar(1L)
+            carService.getCarWithCheckUps(1L)
         } returns car
 
         mvc.get("/cars/1").andExpect {
@@ -83,7 +80,7 @@ class MainControllerTest @Autowired constructor(
     @Test
     fun testFetchingNonExistingCar() {
         every {
-            carService.getCar(any())
+            carService.getCarWithCheckUps(any())
         } throws ResponseStatusException(HttpStatus.NOT_FOUND)
 
         mvc.get("/cars/1").andExpect {
