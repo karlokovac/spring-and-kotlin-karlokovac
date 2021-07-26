@@ -1,6 +1,7 @@
 package com.infinum.academy.restserver.controlers
 
 import com.infinum.academy.restserver.models.AddCarDTO
+import com.infinum.academy.restserver.services.CarCheckUpService
 import com.infinum.academy.restserver.services.CarService
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
@@ -15,7 +16,8 @@ import java.net.URI
 @Controller
 @RequestMapping("/cars")
 class CarController(
-    private val carService: CarService
+    private val carService: CarService,
+    private val carCheckUpService: CarCheckUpService
 ) {
 
     @PostMapping()
@@ -31,4 +33,8 @@ class CarController(
     @GetMapping("/{carId}")
     fun fetchCar(@PathVariable carId: Long) =
         ResponseEntity.ok(carService.getCar(carId))
+
+    @GetMapping("/{carId}/checkUps")
+    fun getCarCheckUpsForCarId(@PathVariable carId: Long, pageable: Pageable) =
+        ResponseEntity.ok(carCheckUpService.getAllCheckUpsForCarId(carId, pageable))
 }

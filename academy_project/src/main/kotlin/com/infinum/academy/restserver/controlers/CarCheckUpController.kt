@@ -2,11 +2,8 @@ package com.infinum.academy.restserver.controlers
 
 import com.infinum.academy.restserver.models.AddCarCheckUpDTO
 import com.infinum.academy.restserver.services.CarCheckUpService
-import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -22,8 +19,4 @@ class CarCheckUpController(
         val id = carCheckUpService.addCheckUp(carCheckUpDTO)
         return ResponseEntity.created(URI.create("http://localhost:8080/carCheckUps/$id")).build()
     }
-
-    @GetMapping("/{carId}")
-    fun getCarCheckUpsForCarId(@PathVariable carId: Long, pageable: Pageable) =
-        ResponseEntity.ok(carCheckUpService.getAllCheckUpsForCarId(carId, pageable))
 }

@@ -2,8 +2,8 @@ package com.infinum.academy.restserver
 
 import com.infinum.academy.restserver.models.AddCarCheckUpDTO
 import com.infinum.academy.restserver.models.AddCarDTO
-import com.infinum.academy.restserver.models.Car
-import com.infinum.academy.restserver.models.toDomainModel
+import com.infinum.academy.restserver.models.StoredCarDTO
+import com.infinum.academy.restserver.models.toStoredCarDTO
 import com.infinum.academy.restserver.repositories.CarCheckUpRepository
 import com.infinum.academy.restserver.repositories.CarRepository
 import com.infinum.academy.restserver.services.CarCheckUpService
@@ -16,7 +16,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.dao.EmptyResultDataAccessException
-import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDate
 
 class ServiceTest {
@@ -35,7 +34,7 @@ class ServiceTest {
     fun testAddingCar() {
         val passedCarDTO = AddCarDTO(1L, "Ford", "Ka", 2010, 12345L)
 
-        val car = passedCarDTO.toDomainModel()
+        val car = passedCarDTO.toStoredCarDTO()
 
         every {
             carRepository.save(car).id
@@ -56,7 +55,7 @@ class ServiceTest {
 
         assertThatThrownBy {
             carService.addCar(passedCarDTO)
-        }.isInstanceOf(ResponseStatusException::class.java)
+        }
     }
 
     @Test
@@ -67,7 +66,7 @@ class ServiceTest {
 
         assertThatThrownBy {
             carService.getCar(1)
-        }.isInstanceOf(ResponseStatusException::class.java)
+        }
     }
 
     @Test
@@ -85,7 +84,7 @@ class ServiceTest {
 
     @Test
     fun testFetchingCar() {
-        val expectedCar = Car(1L, LocalDate.EPOCH, "Ford", "Ka", 2010, 12345L, 0)
+        val expectedCar = StoredCarDTO(1L, LocalDate.EPOCH, "Ford", "Ka", 2010, 12345L, 0)
         every {
             carRepository.findById(0L)
         } returns expectedCar
@@ -94,6 +93,6 @@ class ServiceTest {
         } returns listOf()
         val actualCar = carService.getCar(0L)
 
-        assertThat(actualCar).isEqualTo(expectedCar)
+        assertThat(actualCar.serialNumber).isEqualTo(12345L)
     }
 }

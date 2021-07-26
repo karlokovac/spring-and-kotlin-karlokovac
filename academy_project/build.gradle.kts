@@ -57,6 +57,16 @@ tasks.withType<KotlinCompile> {
     }
 }
 
+tasks.getByName("check").dependsOn("integrationTest")
+tasks.getByName("integrationTest").mustRunAfter("test")
+
+tasks.withType<JacocoReport> {
+    // merge unit and integration test reports so coverage is correct
+    executionData.setFrom(
+        fileTree(buildDir).include("/jacoco/test.exec", "/jacoco/integrationTest.exec")
+    )
+}
+
 tasks.test {
     finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
 }

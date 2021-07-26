@@ -23,13 +23,6 @@ class RestServerApplicationTests @Autowired constructor(
     lateinit var mvc: MockMvc
 
     @Test
-    fun fetchNonExistingCarShouldError() {
-        mvc.get("/cars/10345432")
-            .andExpect {
-                status { is4xxClientError() }
-            }
-    }
-    @Test
     fun canAddCar() {
         val carDTO = AddCarDTO(1L, "Audi", "R8", 2015, 1)
         mvc.post("/cars") {
@@ -96,7 +89,7 @@ class RestServerApplicationTests @Autowired constructor(
 
     @Test
     fun fetchAllCarCheckUpsPage() {
-        mvc.get("/carCheckUps/3").andExpect {
+        mvc.get("/cars/1/checkUps").andExpect {
             status { is2xxSuccessful() }
             jsonPath("$.numberOfElements") { value("1") }
         }

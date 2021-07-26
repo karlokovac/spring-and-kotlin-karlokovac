@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.infinum.academy.restserver.models.AddCarCheckUpDTO
 import com.infinum.academy.restserver.models.AddCarDTO
 import com.infinum.academy.restserver.models.Car
+import com.infinum.academy.restserver.models.StoredCarDTO
 import com.infinum.academy.restserver.services.CarCheckUpService
 import com.infinum.academy.restserver.services.CarService
 import com.ninjasquad.springmockk.MockkBean
@@ -91,7 +92,7 @@ class MainControllerTest @Autowired constructor(
 
     @Test
     fun testFetchingAllCarsPage() {
-        val page = Page.empty<Car>()
+        val page = Page.empty<StoredCarDTO>()
         every {
             carService.getAllCars(any())
         } returns page

@@ -1,7 +1,6 @@
 package com.infinum.academy.restserver.models
 
 import java.time.LocalDate
-import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -9,30 +8,35 @@ import javax.persistence.Id
 import javax.persistence.SequenceGenerator
 import javax.persistence.Table
 
+data class Car(
+    val ownerId: Long,
+    val dateAdded: LocalDate,
+    val manufacturerName: String,
+    val modelName: String,
+    val productionYear: Int,
+    val serialNumber: Long,
+    val id: Long = 0,
+    val carCheckUps: List<CarCheckUp> = emptyList()
+)
+
 @Entity
 @Table(name = "CAR")
-data class Car(
-    @Column(name = "ownerid")
+data class StoredCarDTO(
     val ownerId: Long,
-    @Column(name = "dateadded")
     val dateAdded: LocalDate,
-    @Column(name = "manufacturername")
     val manufacturerName: String,
-    @Column(name = "modelname")
     val modelName: String,
-    @Column(name = "productionyear")
     val productionYear: Int,
-    @Column(name = "serialnumber")
     val serialNumber: Long,
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CAR_SEQ")
     @SequenceGenerator(name = "CAR_SEQ", sequenceName = "CAR_SEQ", allocationSize = 1)
     val id: Long = 0,
-
-    @Transient
-    val carCheckUps: List<CarCheckUp> = emptyList()
 )
+
+fun StoredCarDTO.toDomainModel(list: List<CarCheckUp>) =
+    Car(ownerId, dateAdded, manufacturerName, modelName, productionYear, serialNumber, id, list)
 
 data class AddCarDTO(
     val ownerId: Long,
@@ -42,4 +46,8 @@ data class AddCarDTO(
     val serialNumber: Long,
 )
 
-fun AddCarDTO.toDomainModel() = Car(ownerId, LocalDate.now(), manufacturerName, modelName, productionYear, serialNumber)
+fun AddCarDTO.toDomainModel() =
+    Car(ownerId, LocalDate.now(), manufacturerName, modelName, productionYear, serialNumber)
+
+fun AddCarDTO.toStoredCarDTO() =
+    StoredCarDTO(ownerId, LocalDate.now(), manufacturerName, modelName, productionYear, serialNumber)
