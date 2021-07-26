@@ -13,7 +13,7 @@ data class Car(
     val dateAdded: LocalDate,
     val manufacturerName: String,
     val modelName: String,
-    val productionYear: Int,
+    val productionYear: Short,
     val serialNumber: Long,
     val id: Long = 0,
     val carCheckUps: List<CarCheckUp> = emptyList()
@@ -26,7 +26,7 @@ data class StoredCarDTO(
     val dateAdded: LocalDate,
     val manufacturerName: String,
     val modelName: String,
-    val productionYear: Int,
+    val productionYear: Short,
     val serialNumber: Long,
 
     @Id
@@ -42,7 +42,7 @@ data class AddCarDTO(
     val ownerId: Long,
     val manufacturerName: String,
     val modelName: String,
-    val productionYear: Int,
+    val productionYear: Short,
     val serialNumber: Long,
 )
 
