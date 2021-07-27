@@ -1,24 +1,30 @@
 package com.infinum.academy.restserver.services
 
-import com.infinum.academy.restserver.models.Car
-import com.infinum.academy.restserver.models.CarDTO
+import com.infinum.academy.restserver.models.AddCarDTO
+import com.infinum.academy.restserver.models.toCarDTO
 import com.infinum.academy.restserver.models.toDomainModel
 import com.infinum.academy.restserver.repositories.CarCheckUpRepository
-import com.infinum.academy.restserver.repositories.DatabaseCarRepository
+import com.infinum.academy.restserver.repositories.CarRepository
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
 class CarService(
-    val carRepository: DatabaseCarRepository,
+    val carRepository: CarRepository,
     val carCheckUpRepository: CarCheckUpRepository
 ) {
 
-    fun addCar(carDTO: CarDTO): Long {
-        return carRepository.save(carDTO.toDomainModel())
+    fun addCar(carDTO: AddCarDTO): Long {
+        return carRepository.save(carDTO.toDomainModel()).id
     }
 
-    fun getCarWithCheckUps(id: Long): Car {
-        val car = carRepository.findById(id)
-        return car.copy(carCheckUps = carCheckUpRepository.findAllByCarId(id))
-    }
+    fun getCar(id: Long) =
+        carRepository.findById(id).toCarDTO(
+            carCheckUpRepository.findByCarIdOrderByDateTimeDesc(id)
+        )
+
+    fun getAllCars(pageable: Pageable) =
+        carRepository.findAll(pageable).map {
+            it.toCarDTO(carCheckUpRepository.findByCarIdOrderByDateTimeDesc(it.id))
+        }
 }

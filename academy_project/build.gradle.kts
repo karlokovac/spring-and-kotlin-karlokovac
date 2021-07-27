@@ -5,6 +5,7 @@ plugins {
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     kotlin("jvm") version "1.5.20"
     kotlin("plugin.spring") version "1.5.20"
+    kotlin("plugin.jpa") version "1.5.10"
     jacoco
     id("io.gitlab.arturbosch.detekt").version("1.18.0-RC2")
     id("org.jlleitschuh.gradle.ktlint").version("10.1.0")
@@ -22,23 +23,23 @@ repositories {
 extra["testcontainersVersion"] = "1.15.3"
 
 testSets {
-    val integrationTest by creating { dirName = "integrationTest" }
+    create("integrationTest")
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-jdbc")
-    implementation("org.flywaydb:flyway-core")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.flywaydb:flyway-core")
 
     runtimeOnly("org.postgresql:postgresql")
 
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.mockk:mockk:1.12.0")
     testImplementation("org.assertj:assertj-core:3.20.2")
     testImplementation("com.ninja-squad:springmockk:3.0.1")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
 }
@@ -54,6 +55,16 @@ tasks.withType<KotlinCompile> {
         freeCompilerArgs = listOf("-Xjsr305=strict")
         jvmTarget = "11"
     }
+}
+
+tasks.getByName("check").dependsOn("integrationTest")
+tasks.getByName("integrationTest").mustRunAfter("test")
+
+tasks.withType<JacocoReport> {
+    // merge unit and integration test reports so coverage is correct
+    executionData.setFrom(
+        fileTree(buildDir).include("/jacoco/test.exec", "/jacoco/integrationTest.exec")
+    )
 }
 
 tasks.test {
