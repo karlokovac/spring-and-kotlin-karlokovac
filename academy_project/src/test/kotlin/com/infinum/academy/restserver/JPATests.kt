@@ -1,7 +1,7 @@
 package com.infinum.academy.restserver
 
+import com.infinum.academy.restserver.models.Car
 import com.infinum.academy.restserver.models.CarCheckUp
-import com.infinum.academy.restserver.models.StoredCarDTO
 import com.infinum.academy.restserver.repositories.CarCheckUpRepository
 import com.infinum.academy.restserver.repositories.CarRepository
 import org.assertj.core.api.Assertions.assertThat
@@ -25,8 +25,8 @@ class JPATests @Autowired constructor (
 
     @BeforeEach
     fun setup() {
-        val car1 = StoredCarDTO(1L, LocalDate.now(), "Porsche", "911 GT3", 2020, 11L)
-        val car2 = StoredCarDTO(1L, LocalDate.now(), "Porsche", "Taycan", 2020, 22L)
+        val car1 = Car(1L, LocalDate.now(), "Porsche", "911 GT3", 2020, 11L)
+        val car2 = Car(1L, LocalDate.now(), "Porsche", "Taycan", 2020, 22L)
         carId = carRepository.save(car1).id
         carRepository.save(car2)
 

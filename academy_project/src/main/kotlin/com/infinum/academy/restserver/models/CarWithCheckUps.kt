@@ -8,20 +8,9 @@ import javax.persistence.Id
 import javax.persistence.SequenceGenerator
 import javax.persistence.Table
 
-data class Car(
-    val ownerId: Long,
-    val dateAdded: LocalDate,
-    val manufacturerName: String,
-    val modelName: String,
-    val productionYear: Short,
-    val serialNumber: Long,
-    val id: Long = 0,
-    val carCheckUps: List<CarCheckUp> = emptyList()
-)
-
 @Entity
 @Table(name = "CAR")
-data class StoredCarDTO(
+data class Car(
     val ownerId: Long,
     val dateAdded: LocalDate,
     val manufacturerName: String,
@@ -35,8 +24,19 @@ data class StoredCarDTO(
     val id: Long = 0,
 )
 
-fun StoredCarDTO.toDomainModel(list: List<CarCheckUp>) =
-    Car(ownerId, dateAdded, manufacturerName, modelName, productionYear, serialNumber, id, list)
+fun Car.toCarWithCheckUps(list: List<CarCheckUp>) =
+    CarWithCheckUps(ownerId, dateAdded, manufacturerName, modelName, productionYear, serialNumber, id, list)
+
+data class CarWithCheckUps(
+    val ownerId: Long,
+    val dateAdded: LocalDate,
+    val manufacturerName: String,
+    val modelName: String,
+    val productionYear: Short,
+    val serialNumber: Long,
+    val id: Long = 0,
+    val carCheckUps: List<CarCheckUp> = emptyList()
+)
 
 data class AddCarDTO(
     val ownerId: Long,
@@ -46,8 +46,8 @@ data class AddCarDTO(
     val serialNumber: Long,
 )
 
+fun AddCarDTO.toCarWithCheckUps() =
+    CarWithCheckUps(ownerId, LocalDate.now(), manufacturerName, modelName, productionYear, serialNumber)
+
 fun AddCarDTO.toDomainModel() =
     Car(ownerId, LocalDate.now(), manufacturerName, modelName, productionYear, serialNumber)
-
-fun AddCarDTO.toStoredCarDTO() =
-    StoredCarDTO(ownerId, LocalDate.now(), manufacturerName, modelName, productionYear, serialNumber)

@@ -1,8 +1,8 @@
 package com.infinum.academy.restserver.services
 
 import com.infinum.academy.restserver.models.AddCarDTO
+import com.infinum.academy.restserver.models.toCarWithCheckUps
 import com.infinum.academy.restserver.models.toDomainModel
-import com.infinum.academy.restserver.models.toStoredCarDTO
 import com.infinum.academy.restserver.repositories.CarCheckUpRepository
 import com.infinum.academy.restserver.repositories.CarRepository
 import org.springframework.data.domain.Pageable
@@ -15,11 +15,11 @@ class CarService(
 ) {
 
     fun addCar(carDTO: AddCarDTO): Long {
-        return carRepository.save(carDTO.toStoredCarDTO()).id
+        return carRepository.save(carDTO.toDomainModel()).id
     }
 
     fun getCar(id: Long) =
-        carRepository.findById(id).toDomainModel(
+        carRepository.findById(id).toCarWithCheckUps(
             carCheckUpRepository.findByCarIdOrderByDateTimeDesc(id)
         )
 

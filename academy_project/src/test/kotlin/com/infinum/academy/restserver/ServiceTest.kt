@@ -2,8 +2,8 @@ package com.infinum.academy.restserver
 
 import com.infinum.academy.restserver.models.AddCarCheckUpDTO
 import com.infinum.academy.restserver.models.AddCarDTO
-import com.infinum.academy.restserver.models.StoredCarDTO
-import com.infinum.academy.restserver.models.toStoredCarDTO
+import com.infinum.academy.restserver.models.Car
+import com.infinum.academy.restserver.models.toDomainModel
 import com.infinum.academy.restserver.repositories.CarCheckUpRepository
 import com.infinum.academy.restserver.repositories.CarRepository
 import com.infinum.academy.restserver.services.CarCheckUpService
@@ -34,7 +34,7 @@ class ServiceTest {
     fun testAddingCar() {
         val passedCarDTO = AddCarDTO(1L, "Ford", "Ka", 2010, 12345L)
 
-        val car = passedCarDTO.toStoredCarDTO()
+        val car = passedCarDTO.toDomainModel()
 
         every {
             carRepository.save(car).id
@@ -84,7 +84,7 @@ class ServiceTest {
 
     @Test
     fun testFetchingCar() {
-        val expectedCar = StoredCarDTO(1L, LocalDate.EPOCH, "Ford", "Ka", 2010, 12345L, 0)
+        val expectedCar = Car(1L, LocalDate.EPOCH, "Ford", "Ka", 2010, 12345L, 0)
         every {
             carRepository.findById(0L)
         } returns expectedCar

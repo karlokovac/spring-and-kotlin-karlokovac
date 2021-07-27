@@ -1,7 +1,7 @@
 package com.infinum.academy.restserver.services
 
 import com.infinum.academy.restserver.models.AddCarCheckUpDTO
-import com.infinum.academy.restserver.models.toDomainModel
+import com.infinum.academy.restserver.models.toCarWithCheckUps
 import com.infinum.academy.restserver.repositories.CarCheckUpRepository
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.domain.Pageable
@@ -16,7 +16,7 @@ class CarCheckUpService(
 
     fun addCheckUp(carCheckUpDTO: AddCarCheckUpDTO): Long {
         return try {
-            carCheckUpRepository.save(carCheckUpDTO.toDomainModel()).id
+            carCheckUpRepository.save(carCheckUpDTO.toCarWithCheckUps()).id
         } catch (ex: DataIntegrityViolationException) {
             println(ex)
             throw ResponseStatusException(HttpStatus.NOT_ACCEPTABLE)
