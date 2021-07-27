@@ -1,6 +1,7 @@
 package com.infinum.academy.restserver.services
 
 import com.infinum.academy.restserver.models.AddCarCheckUpDTO
+import com.infinum.academy.restserver.models.toCarCheckUpDTO
 import com.infinum.academy.restserver.models.toCarWithCheckUps
 import com.infinum.academy.restserver.repositories.CarCheckUpRepository
 import org.springframework.dao.DataIntegrityViolationException
@@ -24,5 +25,7 @@ class CarCheckUpService(
     }
 
     fun getAllCheckUpsForCarId(carId: Long, pageable: Pageable) =
-        carCheckUpRepository.findByCarId(carId, pageable)
+        carCheckUpRepository.findByCarId(carId, pageable).map {
+            it.toCarCheckUpDTO()
+        }
 }

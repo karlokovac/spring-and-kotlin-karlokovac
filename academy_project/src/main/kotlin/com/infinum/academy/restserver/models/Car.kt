@@ -1,5 +1,6 @@
 package com.infinum.academy.restserver.models
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDate
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -24,10 +25,10 @@ data class Car(
     val id: Long = 0,
 )
 
-fun Car.toCarWithCheckUps(list: List<CarCheckUp>) =
-    CarWithCheckUps(ownerId, dateAdded, manufacturerName, modelName, productionYear, serialNumber, id, list)
+fun Car.toCarDTO(list: List<CarCheckUp>) =
+    CarDTO(ownerId, dateAdded, manufacturerName, modelName, productionYear, serialNumber, id, list)
 
-data class CarWithCheckUps(
+data class CarDTO(
     val ownerId: Long,
     val dateAdded: LocalDate,
     val manufacturerName: String,
@@ -35,6 +36,7 @@ data class CarWithCheckUps(
     val productionYear: Short,
     val serialNumber: Long,
     val id: Long = 0,
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     val carCheckUps: List<CarCheckUp> = emptyList()
 )
 
@@ -45,9 +47,6 @@ data class AddCarDTO(
     val productionYear: Short,
     val serialNumber: Long,
 )
-
-fun AddCarDTO.toCarWithCheckUps() =
-    CarWithCheckUps(ownerId, LocalDate.now(), manufacturerName, modelName, productionYear, serialNumber)
 
 fun AddCarDTO.toDomainModel() =
     Car(ownerId, LocalDate.now(), manufacturerName, modelName, productionYear, serialNumber)

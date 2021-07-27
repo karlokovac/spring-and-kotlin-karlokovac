@@ -1,7 +1,7 @@
 package com.infinum.academy.restserver.services
 
 import com.infinum.academy.restserver.models.AddCarDTO
-import com.infinum.academy.restserver.models.toCarWithCheckUps
+import com.infinum.academy.restserver.models.toCarDTO
 import com.infinum.academy.restserver.models.toDomainModel
 import com.infinum.academy.restserver.repositories.CarCheckUpRepository
 import com.infinum.academy.restserver.repositories.CarRepository
@@ -19,10 +19,12 @@ class CarService(
     }
 
     fun getCar(id: Long) =
-        carRepository.findById(id).toCarWithCheckUps(
+        carRepository.findById(id).toCarDTO(
             carCheckUpRepository.findByCarIdOrderByDateTimeDesc(id)
         )
 
     fun getAllCars(pageable: Pageable) =
-        carRepository.findAll(pageable)
+        carRepository.findAll(pageable).map {
+            it.toCarDTO(carCheckUpRepository.findByCarIdOrderByDateTimeDesc(it.id))
+        }
 }

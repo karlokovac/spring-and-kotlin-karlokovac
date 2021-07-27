@@ -22,6 +22,8 @@ data class CarCheckUp(
     val dateTime: LocalDateTime = LocalDateTime.now()
 )
 
+fun CarCheckUp.toCarCheckUpDTO() = CarCheckUpDTO(workerName, price, id, dateTime)
+
 data class AddCarCheckUpDTO(
     val workerName: String,
     val price: Double,
@@ -29,3 +31,10 @@ data class AddCarCheckUpDTO(
 )
 
 fun AddCarCheckUpDTO.toCarWithCheckUps() = CarCheckUp(workerName, price, carId)
+
+data class CarCheckUpDTO(
+    val workerName: String,
+    val price: Double,
+    val id: Long = 0,
+    val dateTime: LocalDateTime
+)
