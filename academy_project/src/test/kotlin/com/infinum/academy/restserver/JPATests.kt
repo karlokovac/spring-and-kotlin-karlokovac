@@ -2,7 +2,9 @@ package com.infinum.academy.restserver
 
 import com.infinum.academy.restserver.models.Car
 import com.infinum.academy.restserver.models.CarCheckUp
+import com.infinum.academy.restserver.models.CarDetails
 import com.infinum.academy.restserver.repositories.CarCheckUpRepository
+import com.infinum.academy.restserver.repositories.CarDetailsRepository
 import com.infinum.academy.restserver.repositories.CarRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -17,7 +19,8 @@ import java.time.LocalDate
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class JPATests @Autowired constructor (
     val carRepository: CarRepository,
-    val carCheckUpRepository: CarCheckUpRepository
+    val carCheckUpRepository: CarCheckUpRepository,
+    val carDetailsRepository: CarDetailsRepository
 ) {
 
     var carId: Long = 0
@@ -25,8 +28,10 @@ class JPATests @Autowired constructor (
 
     @BeforeEach
     fun setup() {
-        val car1 = Car(1L, LocalDate.now(), "Porsche", "911 GT3", 2020, 11L)
-        val car2 = Car(1L, LocalDate.now(), "Porsche", "Taycan", 2020, 22L)
+        val carDetails1 = carDetailsRepository.save(CarDetails("Porsche", "911 GT3", false, 1))
+        val carDetails2 = carDetailsRepository.save(CarDetails("Porsche", "Taycan", false, 2))
+        val car1 = Car(1L, LocalDate.now(), carDetails1.id, 2020, 11L)
+        val car2 = Car(1L, LocalDate.now(), carDetails2.id, 2020, 22L)
         carId = carRepository.save(car1).id
         carRepository.save(car2)
 

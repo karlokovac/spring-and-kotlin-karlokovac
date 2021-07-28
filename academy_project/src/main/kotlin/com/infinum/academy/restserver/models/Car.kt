@@ -14,8 +14,7 @@ import javax.persistence.Table
 data class Car(
     val ownerId: Long,
     val dateAdded: LocalDate,
-    val manufacturerName: String,
-    val modelName: String,
+    val carDetailsId: Long,
     val productionYear: Short,
     val serialNumber: Long,
 
@@ -25,14 +24,20 @@ data class Car(
     val id: Long = 0,
 )
 
-fun Car.toCarDTO(list: List<CarCheckUp>) =
-    CarDTO(ownerId, dateAdded, manufacturerName, modelName, productionYear, serialNumber, id, list)
+fun Car.toCarDTO(
+    carDetails: CarDetails,
+    list: List<CarCheckUp>
+) = CarDTO(
+    ownerId, dateAdded, carDetails.manufacturerName, carDetails.modelName, carDetails.isCommon,
+    productionYear, serialNumber, id, list
+)
 
 data class CarDTO(
     val ownerId: Long,
     val dateAdded: LocalDate,
     val manufacturerName: String,
     val modelName: String,
+    val isCommon: Boolean,
     val productionYear: Short,
     val serialNumber: Long,
     val id: Long = 0,
@@ -48,5 +53,5 @@ data class AddCarDTO(
     val serialNumber: Long,
 )
 
-fun AddCarDTO.toDomainModel() =
-    Car(ownerId, LocalDate.now(), manufacturerName, modelName, productionYear, serialNumber)
+fun AddCarDTO.toDomainModel(carDetailsId: Long) =
+    Car(ownerId, LocalDate.now(), carDetailsId, productionYear, serialNumber)
