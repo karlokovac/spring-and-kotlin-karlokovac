@@ -14,32 +14,26 @@ import org.springframework.stereotype.Service
 class CarService(
     val carRepository: CarRepository,
     val carCheckUpRepository: CarCheckUpRepository,
-    val carDetailsRepository: CarDetailsRepository,
     val carDetailsValidationService: CarDetailsValidationService
 ) {
 
     fun addCar(carDTO: AddCarDTO): Long {
-        val id = carDetailsValidationService.getDetailsId(
+        val details = carDetailsValidationService.getDetailsId(
             carDTO.manufacturerName,
             carDTO.modelName
         )
-        return carRepository.save(carDTO.toDomainModel(id)).id
+        return carRepository.save(carDTO.toDomainModel(details)).id
     }
 
     fun getCar(id: Long): CarDTO {
         val car = carRepository.findById(id)
-        val carDetails = carDetailsRepository.findById(car.carDetailsId)
         return car.toCarDTO(
-            carDetails,
             carCheckUpRepository.findByCarIdOrderByDateTimeDesc(id)
         )
     }
 
     fun getAllCars(pageable: Pageable) =
         carRepository.findAll(pageable).map {
-            it.toCarDTO(
-                carDetailsRepository.findById(it.carDetailsId),
-                carCheckUpRepository.findByCarIdOrderByDateTimeDesc(it.id)
-            )
+            it.toCarDTO()
         }
 }

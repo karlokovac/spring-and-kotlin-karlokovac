@@ -1,5 +1,5 @@
 package com.infinum.academy.restserver
-/*
+
 import com.infinum.academy.restserver.models.CarDetailsDTO
 import com.infinum.academy.restserver.services.HttpCarDataService
 import org.assertj.core.api.Assertions.assertThat
@@ -43,7 +43,7 @@ class HttpCarDetailsTest @Autowired constructor(
                                 },
                                 {
                                     "manufacturer":"Abarth",
-                                    "model_name":"1000 Bialbero ",
+                                    "model_name":"1000 Bialbero",
                                     "is_common":0
                                  },
                                 {
@@ -66,4 +66,3 @@ class HttpCarDetailsTest @Autowired constructor(
 
     }
 }
-*/

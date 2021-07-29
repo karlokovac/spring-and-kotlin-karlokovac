@@ -24,7 +24,6 @@ class SchedulingConfig(
     private val carDetailsRepository: CarDetailsRepository
 ) {
 
-    // @Scheduled(cron = "0 0 0 * * *")
     @Scheduled(fixedDelay = 100_000)
     @SchedulerLock(name = "scheduledTaskName", lockAtLeastFor = "20s")
     @CacheEvict("names", allEntries = true)

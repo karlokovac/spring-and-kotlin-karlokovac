@@ -1,6 +1,7 @@
 package com.infinum.academy.restserver.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.io.Serializable
 import javax.persistence.Embeddable
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -20,12 +21,11 @@ data class CarDetails(
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CAR_DETAILS_SEQ")
     @SequenceGenerator(name = "CAR_DETAILS_SEQ", sequenceName = "CAR_DETAILS_SEQ", allocationSize = 1)
     val id: Long = 0,
-)
+) : Serializable
 
 fun CarDetails.toCarDetailsDTO() =
     CarDetailsDTO(manufacturerName, modelName, isCommon)
 
-@Embeddable
 data class CarDetailsDTO(
     @JsonProperty("manufacturer") val manufacturerName: String,
     @JsonProperty("model_name") val modelName: String,

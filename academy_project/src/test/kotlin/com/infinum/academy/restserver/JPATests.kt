@@ -30,8 +30,8 @@ class JPATests @Autowired constructor (
     fun setup() {
         val carDetails1 = carDetailsRepository.save(CarDetails("Porsche", "911 GT3", false, 1))
         val carDetails2 = carDetailsRepository.save(CarDetails("Porsche", "Taycan", false, 2))
-        val car1 = Car(1L, LocalDate.now(), carDetails1.id, 2020, 11L)
-        val car2 = Car(1L, LocalDate.now(), carDetails2.id, 2020, 22L)
+        val car1 = Car(1L, LocalDate.now(), carDetails1, 2020, 11L)
+        val car2 = Car(1L, LocalDate.now(), carDetails2, 2020, 22L)
         carId = carRepository.save(car1).id
         carRepository.save(car2)
 

@@ -7,7 +7,7 @@ import org.springframework.web.reactive.function.client.WebClient
 
 @Configuration
 class WebClientConfig(
-    @Value("\${carDetails-service.base-url}") val baseUrl: String
+    @Value("\${car-details-service.base-url}") val baseUrl: String
 ) {
 
     @Bean
