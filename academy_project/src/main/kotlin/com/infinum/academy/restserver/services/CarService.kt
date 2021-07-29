@@ -5,7 +5,6 @@ import com.infinum.academy.restserver.models.CarDTO
 import com.infinum.academy.restserver.models.toCarDTO
 import com.infinum.academy.restserver.models.toDomainModel
 import com.infinum.academy.restserver.repositories.CarCheckUpRepository
-import com.infinum.academy.restserver.repositories.CarDetailsRepository
 import com.infinum.academy.restserver.repositories.CarRepository
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service

@@ -75,7 +75,6 @@ class MainControllerTest @Autowired constructor(
         mvc.get("/cars/1").andExpect {
             status { is2xxSuccessful() }
             jsonPath("$.id") { value("1") }
-            jsonPath("$.manufacturerName") { value("Ford") }
         }
     }
 

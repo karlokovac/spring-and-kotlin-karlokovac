@@ -33,7 +33,7 @@ class ServiceTest {
     @BeforeEach
     fun setUp() {
         carDetailsValidationService = CarDetailsValidationService(carDetailsRepository)
-        carService = CarService(carRepository, carCheckUpRepository, carDetailsRepository, carDetailsValidationService)
+        carService = CarService(carRepository, carCheckUpRepository, carDetailsValidationService)
         carCheckUpService = CarCheckUpService(carCheckUpRepository)
     }
 
@@ -41,7 +41,7 @@ class ServiceTest {
     fun testAddingCar() {
         val passedCarDTO = AddCarDTO(1L, "Ford", "Ka", 2010, 12345L)
 
-        val car = passedCarDTO.toDomainModel(1)
+        val car = passedCarDTO.toDomainModel(CarDetails("Ford", "Ka", true, 1))
 
         every {
             carRepository.save(car).id
@@ -94,7 +94,7 @@ class ServiceTest {
 
     @Test
     fun testFetchingCar() {
-        val expectedCar = Car(1L, LocalDate.EPOCH, 1, 2010, 12345L, 0)
+        val expectedCar = Car(1L, LocalDate.EPOCH, CarDetails("Ford", "Ka", true, 1), 2010, 12345L, 0)
         every {
             carRepository.findById(0L)
         } returns expectedCar

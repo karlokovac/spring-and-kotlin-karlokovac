@@ -33,7 +33,8 @@ class HttpCarDetailsTest @Autowired constructor(
                 HttpResponse.response()
                     .withStatusCode(200)
                     .withContentType(MediaType.APPLICATION_JSON)
-                    .withBody("""
+                    .withBody(
+                        """
                         {
                             "data":[
                                 {
@@ -53,16 +54,18 @@ class HttpCarDetailsTest @Autowired constructor(
                                 }
                             ]
                         }
-                    """.trimIndent())
+                        """.trimIndent()
+                    )
             )
 
         assertThat(
             httpCarDataService.getAllCarData()
-        ).isEqualTo(listOf(
-            CarDetailsDTO("Abarth", "1000", false),
-            CarDetailsDTO("Abarth", "1000 Bialbero", false),
-            CarDetailsDTO("Abarth", "1000 GT", false)
-        ))
-
+        ).isEqualTo(
+            listOf(
+                CarDetailsDTO("Abarth", "1000", false),
+                CarDetailsDTO("Abarth", "1000 Bialbero", false),
+                CarDetailsDTO("Abarth", "1000 GT", false)
+            )
+        )
     }
 }
