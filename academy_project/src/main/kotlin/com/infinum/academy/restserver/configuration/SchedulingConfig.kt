@@ -1,9 +1,7 @@
 package com.infinum.academy.restserver.configuration
 
-import com.infinum.academy.restserver.models.toCarDetailsDTO
-import com.infinum.academy.restserver.models.toDomainModel
 import com.infinum.academy.restserver.repositories.CarDetailsRepository
-import com.infinum.academy.restserver.services.HttpCarDataService
+import com.infinum.academy.restserver.services.CarDataService
 import net.javacrumbs.shedlock.core.LockProvider
 import net.javacrumbs.shedlock.provider.jdbctemplate.JdbcTemplateLockProvider
 import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock
@@ -20,7 +18,7 @@ import javax.sql.DataSource
 @EnableSchedulerLock(defaultLockAtMostFor = "10m")
 @EnableScheduling
 class SchedulingConfig(
-    private val httpCarDataService: HttpCarDataService,
+    private val carDataService: CarDataService,
     private val carDetailsRepository: CarDetailsRepository
 ) {
 
@@ -29,13 +27,17 @@ class SchedulingConfig(
     @CacheEvict("names", allEntries = true)
     fun updateCarDetails() {
         println("Cleared caches")
-        val carDetails = httpCarDataService.getAllCarData()
+        val carDetails = carDataService.getAllCarData()
             ?: throw NoCarsReceivedException()
-        val existing = carDetailsRepository.findAll().map { it.toCarDetailsDTO() }
+        val existing = carDetailsRepository.findAll()
         carDetailsRepository.saveAll(
             carDetails
-                .filterNot { details -> existing.contains(details) }
-                .map { it.toDomainModel() }
+                .filterNot { details ->
+                    existing.any { carDetails ->
+                        carDetails.modelName==details.modelName &&
+                            carDetails.manufacturerName==details.manufacturerName
+                    }
+                }
         )
     }
 

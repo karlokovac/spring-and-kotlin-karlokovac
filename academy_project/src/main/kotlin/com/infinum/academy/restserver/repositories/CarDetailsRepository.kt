@@ -8,5 +8,5 @@ interface CarDetailsRepository : Repository<CarDetails, Long> {
     fun saveAll(carDetails: Iterable<CarDetails>)
     fun findAll(): List<CarDetails>
     fun findById(id: Long): CarDetails
-    fun findByManufacturerNameAndModelName(manufacturerName: String, modelName: String): CarDetails
+    fun findByManufacturerNameAndModelName(manufacturerName: String, modelName: String): CarDetails?
 }
