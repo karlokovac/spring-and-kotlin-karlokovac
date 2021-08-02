@@ -1,10 +1,10 @@
 package com.infinum.academy.restserver
 
-import com.infinum.academy.restserver.models.AddCarCheckUpDTO
 import com.infinum.academy.restserver.models.AddCarDTO
-import com.infinum.academy.restserver.models.Car
-import com.infinum.academy.restserver.models.CarDetails
-import com.infinum.academy.restserver.models.toDomainModel
+import com.infinum.academy.restserver.models.CarCheckUp
+import com.infinum.academy.restserver.models.CarDetailsEntity
+import com.infinum.academy.restserver.models.CarEntity
+import com.infinum.academy.restserver.models.toEntityModel
 import com.infinum.academy.restserver.repositories.CarCheckUpRepository
 import com.infinum.academy.restserver.repositories.CarDetailsRepository
 import com.infinum.academy.restserver.repositories.CarRepository
@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.dao.EmptyResultDataAccessException
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 class ServiceTest {
     private val carRepository = mockk<CarRepository>()
@@ -33,7 +34,7 @@ class ServiceTest {
     @BeforeEach
     fun setUp() {
         carDetailsValidationService = CarDetailsValidationService(carDetailsRepository)
-        carService = CarService(carRepository, carCheckUpRepository, carDetailsValidationService)
+        carService = CarService(carRepository, carDetailsValidationService)
         carCheckUpService = CarCheckUpService(carCheckUpRepository)
     }
 
@@ -41,14 +42,14 @@ class ServiceTest {
     fun testAddingCar() {
         val passedCarDTO = AddCarDTO(1L, "Ford", "Ka", 2010, 12345L)
 
-        val car = passedCarDTO.toDomainModel(CarDetails("Ford", "Ka", true, 1))
+        val car = passedCarDTO.toEntityModel(CarDetailsEntity("Ford", "Ka", true, 1))
 
         every {
             carRepository.save(car).id
         } returns 1
         every {
             carDetailsRepository.findByManufacturerNameAndModelName("Ford", "Ka")
-        } returns CarDetails("Ford", "Ka", true, 1)
+        } returns CarDetailsEntity("Ford", "Ka", true, 1)
 
         val actualId = carService.addCar(passedCarDTO)
 
@@ -81,7 +82,7 @@ class ServiceTest {
 
     @Test
     fun testAddingCarCheckUp() {
-        val passedCarCheckUpDTO = AddCarCheckUpDTO("Ante Antić", 1000.00, 1)
+        val passedCarCheckUpDTO = CarCheckUp("Ante Antić", 1000.00, 1, LocalDateTime.now())
 
         every {
             carCheckUpRepository.save(any()).id
@@ -94,16 +95,16 @@ class ServiceTest {
 
     @Test
     fun testFetchingCar() {
-        val expectedCar = Car(1L, LocalDate.EPOCH, CarDetails("Ford", "Ka", true, 1), 2010, 12345L, 0)
+        val expectedCarEntity = CarEntity(1L, LocalDate.EPOCH, CarDetailsEntity("Ford", "Ka", true, 1), 2010, 12345L, 0)
         every {
             carRepository.findById(0L)
-        } returns expectedCar
+        } returns expectedCarEntity
         every {
             carCheckUpRepository.findByCarIdOrderByDateTimeDesc(0L)
         } returns listOf()
         every {
             carDetailsRepository.findById(1)
-        } returns CarDetails("Ford", "Ka", true, 1)
+        } returns CarDetailsEntity("Ford", "Ka", true, 1)
         val actualCar = carService.getCar(0L)
 
         assertThat(actualCar.serialNumber).isEqualTo(12345L)

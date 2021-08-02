@@ -11,7 +11,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "CAR_DETAILS")
-data class CarDetails(
+data class CarDetailsEntity(
     val manufacturerName: String,
     val modelName: String,
     val isCommon: Boolean,
@@ -22,13 +22,10 @@ data class CarDetails(
     val id: Long = 0,
 ) : Serializable
 
-fun CarDetails.toCarDetailsDTO() =
-    CarDetailsDTO(manufacturerName, modelName, isCommon)
-
-data class CarDetailsDTO(
+data class CarDetails(
     @JsonProperty("manufacturer") val manufacturerName: String,
     @JsonProperty("model_name") val modelName: String,
     @JsonProperty("is_common") val isCommon: Boolean
 )
 
-fun CarDetailsDTO.toDomainModel() = CarDetails(manufacturerName, modelName, isCommon)
+fun CarDetails.toEntityModel() = CarDetailsEntity(manufacturerName, modelName, isCommon)

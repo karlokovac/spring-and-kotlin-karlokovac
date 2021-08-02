@@ -1,6 +1,8 @@
 package com.infinum.academy.restserver.models
 
-import com.fasterxml.jackson.annotation.JsonInclude
+import org.springframework.hateoas.IanaLinkRelations
+import org.springframework.hateoas.RepresentationModel
+import org.springframework.hateoas.server.core.Relation
 import java.time.LocalDate
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -12,11 +14,11 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "CAR")
-data class Car(
+data class CarEntity(
     val ownerId: Long,
     val dateAdded: LocalDate,
     @ManyToOne
-    val carDetails: CarDetails,
+    val carDetails: CarDetailsEntity,
     val productionYear: Short,
     val serialNumber: Long,
 
@@ -26,20 +28,7 @@ data class Car(
     val id: Long = 0,
 )
 
-fun Car.toCarDTO(
-    list: List<CarCheckUp> = emptyList()
-) = CarDTO(ownerId, dateAdded, carDetails, productionYear, serialNumber, id, list)
-
-data class CarDTO(
-    val ownerId: Long,
-    val dateAdded: LocalDate,
-    val carDetails: CarDetails,
-    val productionYear: Short,
-    val serialNumber: Long,
-    val id: Long = 0,
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    val carCheckUps: List<CarCheckUp> = emptyList()
-)
+fun CarEntity.toResourceModel() = CarResource(ownerId, dateAdded, carDetails, productionYear, serialNumber, id)
 
 data class AddCarDTO(
     val ownerId: Long,
@@ -49,5 +38,15 @@ data class AddCarDTO(
     val serialNumber: Long,
 )
 
-fun AddCarDTO.toDomainModel(carDetails: CarDetails) =
-    Car(ownerId, LocalDate.now(), carDetails, productionYear, serialNumber)
+fun AddCarDTO.toEntityModel(carDetailsEntity: CarDetailsEntity) =
+    CarEntity(ownerId, LocalDate.now(), carDetailsEntity, productionYear, serialNumber)
+
+@Relation(collectionRelation = IanaLinkRelations.ITEM_VALUE)
+data class CarResource(
+    val ownerId: Long,
+    val dateAdded: LocalDate,
+    val carDetails: CarDetailsEntity,
+    val productionYear: Short,
+    val serialNumber: Long,
+    val id: Long = 0,
+) : RepresentationModel<CarResource>()

@@ -1,7 +1,7 @@
 package com.infinum.academy.restserver.services
 
-import com.infinum.academy.restserver.models.CarDetails
+import com.infinum.academy.restserver.models.CarDetailsEntity
 
 interface CarDataService {
-    fun getAllCarData(): List<CarDetails>?
+    fun getAllCarData(): List<CarDetailsEntity>?
 }

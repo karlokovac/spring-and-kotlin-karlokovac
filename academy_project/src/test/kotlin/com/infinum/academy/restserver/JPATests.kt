@@ -1,8 +1,8 @@
 package com.infinum.academy.restserver
 
-import com.infinum.academy.restserver.models.Car
-import com.infinum.academy.restserver.models.CarCheckUp
-import com.infinum.academy.restserver.models.CarDetails
+import com.infinum.academy.restserver.models.CarCheckUpEntity
+import com.infinum.academy.restserver.models.CarDetailsEntity
+import com.infinum.academy.restserver.models.CarEntity
 import com.infinum.academy.restserver.repositories.CarCheckUpRepository
 import com.infinum.academy.restserver.repositories.CarDetailsRepository
 import com.infinum.academy.restserver.repositories.CarRepository
@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.data.domain.Pageable
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -28,14 +29,14 @@ class JPATests @Autowired constructor (
 
     @BeforeEach
     fun setup() {
-        val carDetails1 = carDetailsRepository.save(CarDetails("Porsche", "911 GT3", false, 1))
-        val carDetails2 = carDetailsRepository.save(CarDetails("Porsche", "Taycan", false, 2))
-        val car1 = Car(1L, LocalDate.now(), carDetails1, 2020, 11L)
-        val car2 = Car(1L, LocalDate.now(), carDetails2, 2020, 22L)
-        carId = carRepository.save(car1).id
-        carRepository.save(car2)
+        val carDetailsEntity1 = carDetailsRepository.save(CarDetailsEntity("Porsche", "911 GT3", false, 1))
+        val carDetailsEntity2 = carDetailsRepository.save(CarDetailsEntity("Porsche", "Taycan", false, 2))
+        val carEntity1 = CarEntity(1L, LocalDate.now(), carDetailsEntity1, 2020, 11L)
+        val carEntity2 = CarEntity(1L, LocalDate.now(), carDetailsEntity2, 2020, 22L)
+        carId = carRepository.save(carEntity1).id
+        carRepository.save(carEntity2)
 
-        checkUpId = carCheckUpRepository.save(CarCheckUp("Ivo Ivić", 12000.0, carId)).id
+        checkUpId = carCheckUpRepository.save(CarCheckUpEntity("Ivo Ivić", 12000.0, carId, LocalDateTime.now())).id
     }
 
     @Test
