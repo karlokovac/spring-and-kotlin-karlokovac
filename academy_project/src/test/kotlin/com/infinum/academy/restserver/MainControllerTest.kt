@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.infinum.academy.restserver.models.AddCarCheckUpDTO
 import com.infinum.academy.restserver.models.AddCarDTO
 import com.infinum.academy.restserver.models.CarDTO
+import com.infinum.academy.restserver.models.CarDetails
 import com.infinum.academy.restserver.services.CarCheckUpService
 import com.infinum.academy.restserver.services.CarService
 import com.ninjasquad.springmockk.MockkBean
@@ -65,7 +66,7 @@ class MainControllerTest @Autowired constructor(
 
     @Test
     fun testFetchingExistingCar() {
-        val car = CarDTO(1L, LocalDate.EPOCH, "Ford", "Ka", 2010, 12345L, 1L)
+        val car = CarDTO(1L, LocalDate.EPOCH, CarDetails("Ford", "Ka", true), 2010, 12345L, 1L)
 
         every {
             carService.getCar(1L)
@@ -74,7 +75,6 @@ class MainControllerTest @Autowired constructor(
         mvc.get("/cars/1").andExpect {
             status { is2xxSuccessful() }
             jsonPath("$.id") { value("1") }
-            jsonPath("$.manufacturerName") { value("Ford") }
         }
     }
 

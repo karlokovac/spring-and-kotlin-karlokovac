@@ -3,10 +3,13 @@ package com.infinum.academy.restserver
 import com.infinum.academy.restserver.models.AddCarCheckUpDTO
 import com.infinum.academy.restserver.models.AddCarDTO
 import com.infinum.academy.restserver.models.Car
+import com.infinum.academy.restserver.models.CarDetails
 import com.infinum.academy.restserver.models.toDomainModel
 import com.infinum.academy.restserver.repositories.CarCheckUpRepository
+import com.infinum.academy.restserver.repositories.CarDetailsRepository
 import com.infinum.academy.restserver.repositories.CarRepository
 import com.infinum.academy.restserver.services.CarCheckUpService
+import com.infinum.academy.restserver.services.CarDetailsValidationService
 import com.infinum.academy.restserver.services.CarService
 import io.mockk.every
 import io.mockk.mockk
@@ -21,12 +24,16 @@ import java.time.LocalDate
 class ServiceTest {
     private val carRepository = mockk<CarRepository>()
     private val carCheckUpRepository = mockk<CarCheckUpRepository>()
+    private val carDetailsRepository = mockk<CarDetailsRepository>()
+
     private lateinit var carService: CarService
     private lateinit var carCheckUpService: CarCheckUpService
+    private lateinit var carDetailsValidationService: CarDetailsValidationService
 
     @BeforeEach
     fun setUp() {
-        carService = CarService(carRepository, carCheckUpRepository)
+        carDetailsValidationService = CarDetailsValidationService(carDetailsRepository)
+        carService = CarService(carRepository, carCheckUpRepository, carDetailsValidationService)
         carCheckUpService = CarCheckUpService(carCheckUpRepository)
     }
 
@@ -34,11 +41,14 @@ class ServiceTest {
     fun testAddingCar() {
         val passedCarDTO = AddCarDTO(1L, "Ford", "Ka", 2010, 12345L)
 
-        val car = passedCarDTO.toDomainModel()
+        val car = passedCarDTO.toDomainModel(CarDetails("Ford", "Ka", true, 1))
 
         every {
             carRepository.save(car).id
         } returns 1
+        every {
+            carDetailsRepository.findByManufacturerNameAndModelName("Ford", "Ka")
+        } returns CarDetails("Ford", "Ka", true, 1)
 
         val actualId = carService.addCar(passedCarDTO)
 
@@ -84,13 +94,16 @@ class ServiceTest {
 
     @Test
     fun testFetchingCar() {
-        val expectedCar = Car(1L, LocalDate.EPOCH, "Ford", "Ka", 2010, 12345L, 0)
+        val expectedCar = Car(1L, LocalDate.EPOCH, CarDetails("Ford", "Ka", true, 1), 2010, 12345L, 0)
         every {
             carRepository.findById(0L)
         } returns expectedCar
         every {
             carCheckUpRepository.findByCarIdOrderByDateTimeDesc(0L)
         } returns listOf()
+        every {
+            carDetailsRepository.findById(1)
+        } returns CarDetails("Ford", "Ka", true, 1)
         val actualCar = carService.getCar(0L)
 
         assertThat(actualCar.serialNumber).isEqualTo(12345L)

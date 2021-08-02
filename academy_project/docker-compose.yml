@@ -10,5 +10,13 @@ services:
       - "POSTGRES_USER=admin"
       - "POSTGRES_PASSWORD=admin"
 
+  redis-cache:
+    image: "redis:6.2.4-alpine"
+    ports:
+      - "6379:6379"
+    volumes:
+      - "cache-data:/data"
+
 volumes:
   cars-data:
+  cache-data:

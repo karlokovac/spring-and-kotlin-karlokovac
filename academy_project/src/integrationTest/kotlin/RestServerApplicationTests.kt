@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.post
 @SpringBootTest(classes = [RestServerApplication::class])
 @AutoConfigureMockMvc
 class RestServerApplicationTests @Autowired constructor(
-    private val mapper: ObjectMapper
+    private val mapper: ObjectMapper,
 ) {
 
     @Autowired

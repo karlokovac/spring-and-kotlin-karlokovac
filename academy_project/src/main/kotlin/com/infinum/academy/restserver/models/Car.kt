@@ -6,6 +6,7 @@ import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.ManyToOne
 import javax.persistence.SequenceGenerator
 import javax.persistence.Table
 
@@ -14,8 +15,8 @@ import javax.persistence.Table
 data class Car(
     val ownerId: Long,
     val dateAdded: LocalDate,
-    val manufacturerName: String,
-    val modelName: String,
+    @ManyToOne
+    val carDetails: CarDetails,
     val productionYear: Short,
     val serialNumber: Long,
 
@@ -25,14 +26,14 @@ data class Car(
     val id: Long = 0,
 )
 
-fun Car.toCarDTO(list: List<CarCheckUp>) =
-    CarDTO(ownerId, dateAdded, manufacturerName, modelName, productionYear, serialNumber, id, list)
+fun Car.toCarDTO(
+    list: List<CarCheckUp> = emptyList()
+) = CarDTO(ownerId, dateAdded, carDetails, productionYear, serialNumber, id, list)
 
 data class CarDTO(
     val ownerId: Long,
     val dateAdded: LocalDate,
-    val manufacturerName: String,
-    val modelName: String,
+    val carDetails: CarDetails,
     val productionYear: Short,
     val serialNumber: Long,
     val id: Long = 0,
@@ -48,5 +49,5 @@ data class AddCarDTO(
     val serialNumber: Long,
 )
 
-fun AddCarDTO.toDomainModel() =
-    Car(ownerId, LocalDate.now(), manufacturerName, modelName, productionYear, serialNumber)
+fun AddCarDTO.toDomainModel(carDetails: CarDetails) =
+    Car(ownerId, LocalDate.now(), carDetails, productionYear, serialNumber)
