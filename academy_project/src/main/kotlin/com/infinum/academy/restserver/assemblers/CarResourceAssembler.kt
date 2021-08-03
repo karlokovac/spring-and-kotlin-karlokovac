@@ -11,8 +11,6 @@ import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSuppor
 import org.springframework.hateoas.server.mvc.linkTo
 import org.springframework.stereotype.Component
 
-private const val PAGE_SIZE = 10
-
 @Component
 class CarResourceAssembler :
     RepresentationModelAssemblerSupport<CarEntity, CarResource>(
@@ -24,7 +22,7 @@ class CarResourceAssembler :
         return createModelWithId(entity.id, entity).apply {
             add(
                 linkTo<CarController> {
-                    getCarCheckUpsForCarId(entity.id, Pageable.ofSize(PAGE_SIZE), nullAssembler)
+                    getCarCheckUpsForCarId(entity.id, Pageable.unpaged(), nullAssembler)
                 }.withRel("checkups")
             )
         }

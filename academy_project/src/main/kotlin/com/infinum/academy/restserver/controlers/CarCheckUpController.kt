@@ -3,6 +3,7 @@ package com.infinum.academy.restserver.controlers
 import com.infinum.academy.restserver.assemblers.CheckUpResourceAssembler
 import com.infinum.academy.restserver.models.CarCheckUp
 import com.infinum.academy.restserver.models.CarCheckUpResource
+import com.infinum.academy.restserver.models.UpcomingDuration
 import com.infinum.academy.restserver.services.CarCheckUpService
 import org.springframework.hateoas.CollectionModel
 import org.springframework.http.ResponseEntity
@@ -12,8 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
-import java.time.Period
 
 @Controller
 @RequestMapping("/checkups")
@@ -50,17 +51,12 @@ class CarCheckUpController(
         )
     }
 
-    @GetMapping("/upcoming/{duration}")
-    fun upcoming(@PathVariable duration: String): ResponseEntity<CollectionModel<CarCheckUpResource>> {
-        val period = when (duration) {
-            "" -> Period.ofMonths(1)
-            "week" -> Period.ofWeeks(1)
-            "month" -> Period.ofMonths(1)
-            "half" -> Period.ofMonths(6)
-            else -> throw WrongFormatException()
-        }
+    @GetMapping("/upcoming")
+    fun upcoming(
+        @RequestParam("duration", defaultValue = "MONTH") duration: UpcomingDuration
+    ): ResponseEntity<CollectionModel<CarCheckUpResource>> {
         return ResponseEntity.ok(
-            carCheckUpResourceAssembler.toCollectionModel(carCheckUpService.getWithinDuration(period))
+            carCheckUpResourceAssembler.toCollectionModel(carCheckUpService.getWithinDuration(duration))
         )
     }
 }
