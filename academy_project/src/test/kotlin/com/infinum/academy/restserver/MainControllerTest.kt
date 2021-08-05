@@ -50,7 +50,7 @@ class MainControllerTest @Autowired constructor(
     lateinit var checkUpPagedResourceAssembler: PagedResourcesAssembler<CarCheckUpEntity>
 
     @Test
-    @WithMockUser(authorities = ["ADMIN"])
+    @WithMockUser(authorities = ["SCOPE_ADMIN"])
     fun testAddingCar() {
         val carDTO = AddCarDTO(1L, "Ford", "Ka", 2010, 12345L)
 
@@ -67,7 +67,7 @@ class MainControllerTest @Autowired constructor(
     }
 
     @Test
-    @WithMockUser(authorities = ["ADMIN"])
+    @WithMockUser(authorities = ["SCOPE_ADMIN"])
     fun testAddingCarCarCheckUp() {
         val carCheckUp = CarCheckUp("Ante Antic", 145.0, 12345L, LocalDateTime.now())
 
@@ -84,7 +84,7 @@ class MainControllerTest @Autowired constructor(
     }
 
     @Test
-    @WithMockUser(authorities = ["ADMIN"])
+    @WithMockUser(authorities = ["SCOPE_ADMIN"])
     fun testFetchingExistingCar() {
         val car = CarEntity(1L, LocalDate.EPOCH, CarDetailsEntity("Ford", "Ka", true), 2010, 12345L, 1L)
 
@@ -101,7 +101,7 @@ class MainControllerTest @Autowired constructor(
     }
 
     @Test
-    @WithMockUser(authorities = ["ADMIN"])
+    @WithMockUser(authorities = ["SCOPE_ADMIN"])
     fun testFetchingNonExistingCar() {
         every {
             carService.getCar(any())
@@ -113,7 +113,7 @@ class MainControllerTest @Autowired constructor(
     }
 
     @Test
-    @WithMockUser(authorities = ["ADMIN"])
+    @WithMockUser(authorities = ["SCOPE_ADMIN"])
     fun testFetchingAllCarsPage() {
         val page = Page.empty<CarEntity>()
         every {
