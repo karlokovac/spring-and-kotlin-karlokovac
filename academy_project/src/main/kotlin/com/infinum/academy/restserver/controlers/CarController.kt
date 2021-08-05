@@ -14,6 +14,7 @@ import org.springframework.data.web.PagedResourcesAssembler
 import org.springframework.hateoas.PagedModel
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -73,5 +74,13 @@ class CarController(
                 carCheckUpResourceAssembler
             )
         )
+    }
+
+    @DeleteMapping("/{carId}")
+    fun deleteCar(
+        @PathVariable carId: Long,
+    ): ResponseEntity<Long> {
+        carService.deleteCarWithId(carId)
+        return ResponseEntity.ok(carId)
     }
 }

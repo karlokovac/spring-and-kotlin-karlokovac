@@ -46,4 +46,8 @@ class CarCheckUpService(
             startDateTime, endDateTime
         )
     }
+
+    fun deleteCheckUp(id: Long) {
+        carCheckUpRepository.deleteById(id)
+    }
 }

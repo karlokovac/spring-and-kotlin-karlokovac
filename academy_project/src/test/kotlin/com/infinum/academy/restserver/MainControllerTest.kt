@@ -10,6 +10,7 @@ import com.infinum.academy.restserver.models.CarDetailsEntity
 import com.infinum.academy.restserver.models.CarEntity
 import com.infinum.academy.restserver.models.CarResource
 import com.infinum.academy.restserver.services.CarCheckUpService
+import com.infinum.academy.restserver.services.CarDetailsService
 import com.infinum.academy.restserver.services.CarService
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.web.PagedResourcesAssembler
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
@@ -37,6 +39,8 @@ class MainControllerTest @Autowired constructor(
     @MockkBean
     lateinit var carCheckUpService: CarCheckUpService
     @MockkBean
+    lateinit var carDetailsService: CarDetailsService
+    @MockkBean
     lateinit var carResourceAssembler: CarResourceAssembler
     @MockkBean
     lateinit var carPagedResourceAssembler: PagedResourcesAssembler<CarEntity>
@@ -46,6 +50,7 @@ class MainControllerTest @Autowired constructor(
     lateinit var checkUpPagedResourceAssembler: PagedResourcesAssembler<CarCheckUpEntity>
 
     @Test
+    @WithMockUser(authorities = ["ADMIN"])
     fun testAddingCar() {
         val carDTO = AddCarDTO(1L, "Ford", "Ka", 2010, 12345L)
 
@@ -62,6 +67,7 @@ class MainControllerTest @Autowired constructor(
     }
 
     @Test
+    @WithMockUser(authorities = ["ADMIN"])
     fun testAddingCarCarCheckUp() {
         val carCheckUp = CarCheckUp("Ante Antic", 145.0, 12345L, LocalDateTime.now())
 
@@ -78,6 +84,7 @@ class MainControllerTest @Autowired constructor(
     }
 
     @Test
+    @WithMockUser(authorities = ["ADMIN"])
     fun testFetchingExistingCar() {
         val car = CarEntity(1L, LocalDate.EPOCH, CarDetailsEntity("Ford", "Ka", true), 2010, 12345L, 1L)
 
@@ -94,6 +101,7 @@ class MainControllerTest @Autowired constructor(
     }
 
     @Test
+    @WithMockUser(authorities = ["ADMIN"])
     fun testFetchingNonExistingCar() {
         every {
             carService.getCar(any())
@@ -105,6 +113,7 @@ class MainControllerTest @Autowired constructor(
     }
 
     @Test
+    @WithMockUser(authorities = ["ADMIN"])
     fun testFetchingAllCarsPage() {
         val page = Page.empty<CarEntity>()
         every {

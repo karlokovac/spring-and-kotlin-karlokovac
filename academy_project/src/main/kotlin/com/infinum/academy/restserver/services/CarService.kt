@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 @Service
 class CarService(
     val carRepository: CarRepository,
-    val carDetailsValidationService: CarDetailsValidationService
+    val carDetailsValidationService: CarDetailsService
 ) {
 
     fun addCar(carDTO: AddCarDTO): Long {
@@ -28,5 +28,9 @@ class CarService(
 
     fun getAllCars(pageable: Pageable): Page<CarEntity> {
         return carRepository.findAll(pageable)
+    }
+
+    fun deleteCarWithId(id: Long) {
+        return carRepository.deleteById(id)
     }
 }

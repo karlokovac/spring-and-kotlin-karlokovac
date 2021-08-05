@@ -13,4 +13,5 @@ interface CarCheckUpRepository : Repository<CarCheckUpEntity, Long> {
     fun findByCarId(carId: Long, pageable: Pageable): Page<CarCheckUpEntity>
     fun findFirst10ByDateTimeBeforeOrderByDateTimeDesc(dateTime: LocalDateTime): List<CarCheckUpEntity>
     fun findByDateTimeBetweenOrderByDateTime(from: LocalDateTime, to: LocalDateTime): List<CarCheckUpEntity>
+    fun deleteById(id: Long)
 }
