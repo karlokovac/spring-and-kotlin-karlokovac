@@ -1,4 +1,11 @@
 services:
+  app:
+    image: "academy/buildpack-image"
+    ports:
+      - "8080:8080"
+    environment:
+      - "SPRING_DATASOURCE_URL=jdbc:postgresql://cars-db:5432/cars-db"
+
   cars-db:
     image: "postgres:13-alpine"
     ports:
