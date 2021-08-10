@@ -9,4 +9,5 @@ interface CarRepository : Repository<CarEntity, Long> {
     fun save(carEntity: CarEntity): CarEntity
     fun findById(id: Long): CarEntity
     fun findAll(pageable: Pageable): Page<CarEntity>
+    fun deleteById(id: Long)
 }

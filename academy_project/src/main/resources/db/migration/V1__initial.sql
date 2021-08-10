@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS checkup(
     price FLOAT NOT NULL,
     car_id BIGINT NOT NULL,
     CONSTRAINT checkup_id PRIMARY KEY (id),
-    CONSTRAINT checkup_carid_fk FOREIGN KEY (car_id) REFERENCES CAR(id)
+    CONSTRAINT checkup_carid_fk FOREIGN KEY (car_id) REFERENCES CAR(id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE IF NOT EXISTS car_seq;

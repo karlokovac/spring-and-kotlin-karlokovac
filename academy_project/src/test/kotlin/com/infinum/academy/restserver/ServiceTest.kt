@@ -9,7 +9,7 @@ import com.infinum.academy.restserver.repositories.CarCheckUpRepository
 import com.infinum.academy.restserver.repositories.CarDetailsRepository
 import com.infinum.academy.restserver.repositories.CarRepository
 import com.infinum.academy.restserver.services.CarCheckUpService
-import com.infinum.academy.restserver.services.CarDetailsValidationService
+import com.infinum.academy.restserver.services.CarDetailsService
 import com.infinum.academy.restserver.services.CarService
 import io.mockk.every
 import io.mockk.mockk
@@ -29,11 +29,11 @@ class ServiceTest {
 
     private lateinit var carService: CarService
     private lateinit var carCheckUpService: CarCheckUpService
-    private lateinit var carDetailsValidationService: CarDetailsValidationService
+    private lateinit var carDetailsValidationService: CarDetailsService
 
     @BeforeEach
     fun setUp() {
-        carDetailsValidationService = CarDetailsValidationService(carDetailsRepository)
+        carDetailsValidationService = CarDetailsService(carDetailsRepository)
         carService = CarService(carRepository, carDetailsValidationService)
         carCheckUpService = CarCheckUpService(carCheckUpRepository)
     }

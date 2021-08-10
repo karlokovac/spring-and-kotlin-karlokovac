@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
+import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
@@ -24,6 +25,7 @@ class RestServerApplicationTests @Autowired constructor(
     lateinit var mvc: MockMvc
 
     @Test
+    @WithMockUser(authorities = ["SCOPE_ADMIN"])
     fun canAddCar() {
         val carDTO = AddCarDTO(1L, "Audi", "R8", 2015, 1)
         mvc.post("/cars") {
@@ -35,6 +37,7 @@ class RestServerApplicationTests @Autowired constructor(
     }
 
     @Test
+    @WithMockUser(authorities = ["SCOPE_ADMIN"])
     fun fetchExistingCar() {
         val carDTO = AddCarDTO(1L, "Audi", "R8", 2015, 2)
         val receivedId = mvc.post("/cars") {
@@ -51,6 +54,7 @@ class RestServerApplicationTests @Autowired constructor(
     }
 
     @Test
+    @WithMockUser(authorities = ["SCOPE_ADMIN"])
     fun testAddingCarCheckUp() {
         val carDTO = AddCarDTO(1L, "Audi", "R8", 2015, 3)
         val receivedId = mvc.post("/cars") {
@@ -70,6 +74,7 @@ class RestServerApplicationTests @Autowired constructor(
     }
 
     @Test
+    @WithMockUser(authorities = ["SCOPE_ADMIN"])
     fun testAddingCarCheckUpToNonExistingCar() {
         val carCheckUpDTO = CarCheckUp("Iva Ivić", 200.0, 164689L, LocalDateTime.now())
         mvc.post("/checkups") {
@@ -81,6 +86,7 @@ class RestServerApplicationTests @Autowired constructor(
     }
 
     @Test
+    @WithMockUser(authorities = ["SCOPE_ADMIN"])
     fun fetchAllCarsPage() {
         mvc.get("/cars").andExpect {
             status { is2xxSuccessful() }
@@ -89,6 +95,7 @@ class RestServerApplicationTests @Autowired constructor(
     }
 
     @Test
+    @WithMockUser(authorities = ["SCOPE_ADMIN"])
     fun fetchAllCarCheckUpsPage() {
         mvc.get("/cars/1/checkups").andExpect {
             status { is2xxSuccessful() }
@@ -97,6 +104,7 @@ class RestServerApplicationTests @Autowired constructor(
     }
 
     @Test
+    @WithMockUser(authorities = ["SCOPE_ADMIN"])
     fun fetchRecentCarCheckUpsPage() {
         mvc.get("/checkups/recent").andExpect {
             status { is2xxSuccessful() }
@@ -105,6 +113,7 @@ class RestServerApplicationTests @Autowired constructor(
     }
 
     @Test
+    @WithMockUser(authorities = ["SCOPE_ADMIN"])
     fun fetchOneCheckUp() {
         mvc.get("/checkups/1").andExpect {
             status { is2xxSuccessful() }

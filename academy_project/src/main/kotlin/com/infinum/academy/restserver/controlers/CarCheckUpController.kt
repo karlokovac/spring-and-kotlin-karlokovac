@@ -8,6 +8,7 @@ import com.infinum.academy.restserver.services.CarCheckUpService
 import org.springframework.hateoas.CollectionModel
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -58,6 +59,12 @@ class CarCheckUpController(
         return ResponseEntity.ok(
             carCheckUpResourceAssembler.toCollectionModel(carCheckUpService.getWithinDuration(duration))
         )
+    }
+
+    @DeleteMapping("/{id}")
+    fun deleteCheckUp(@PathVariable id: Long): ResponseEntity<Long> {
+        carCheckUpService.deleteCheckUp(id)
+        return ResponseEntity.ok(id)
     }
 }
 

@@ -22,6 +22,8 @@ data class CarDetailsEntity(
     val id: Long = 0,
 ) : Serializable
 
+fun CarDetailsEntity.toCarDetailsPair() = CarDetailsPair(manufacturerName, modelName)
+
 data class CarDetails(
     @JsonProperty("manufacturer") val manufacturerName: String,
     @JsonProperty("model_name") val modelName: String,
@@ -29,3 +31,8 @@ data class CarDetails(
 )
 
 fun CarDetails.toEntityModel() = CarDetailsEntity(manufacturerName, modelName, isCommon)
+
+data class CarDetailsPair(
+    val manufacturerName: String,
+    val modelName: String,
+)

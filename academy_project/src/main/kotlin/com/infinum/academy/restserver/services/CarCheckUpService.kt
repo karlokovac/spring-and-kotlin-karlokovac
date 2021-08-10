@@ -12,9 +12,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDateTime
-import java.time.Period
-
-private const val HALF_YEAR = 6
 
 @Service
 class CarCheckUpService(
@@ -43,15 +40,14 @@ class CarCheckUpService(
     }
 
     fun getWithinDuration(duration: UpcomingDuration): List<CarCheckUpEntity> {
-        val period = when (duration) {
-            UpcomingDuration.WEEK -> Period.ofWeeks(1)
-            UpcomingDuration.MONTH -> Period.ofMonths(1)
-            UpcomingDuration.HALF_YEAR -> Period.ofMonths(HALF_YEAR)
-            else -> Period.ofMonths(1)
-        }
+        val startDateTime = LocalDateTime.now()
+        val endDateTime = startDateTime.plus(duration.period)
         return carCheckUpRepository.findByDateTimeBetweenOrderByDateTime(
-            LocalDateTime.now(),
-            LocalDateTime.now().plus(period)
+            startDateTime, endDateTime
         )
+    }
+
+    fun deleteCheckUp(id: Long) {
+        carCheckUpRepository.deleteById(id)
     }
 }
