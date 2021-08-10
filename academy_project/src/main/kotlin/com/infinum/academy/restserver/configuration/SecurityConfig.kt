@@ -29,13 +29,13 @@ class SecurityConfig {
             authorizeRequests {
                 authorize(HttpMethod.POST, "/cars", hasAnyAuthority(ADMIN, USER))
                 authorize(HttpMethod.GET, "/cars", hasAuthority(ADMIN))
+                authorize(HttpMethod.GET, "/cars/saved-models", permitAll)
                 authorize(HttpMethod.GET, "/cars/*", hasAnyAuthority(ADMIN, USER))
-                authorize(HttpMethod.POST, "/checkups", hasAuthority(ADMIN))
+                authorize(HttpMethod.DELETE, "/cars/*", hasAuthority(ADMIN))
                 authorize(HttpMethod.GET, "/cars/*/checkups", hasAnyAuthority(ADMIN, USER))
+                authorize(HttpMethod.POST, "/checkups", hasAuthority(ADMIN))
                 authorize(HttpMethod.GET, "/checkups/recent", hasAuthority(ADMIN))
                 authorize(HttpMethod.GET, "/checkups/upcoming", hasAuthority(ADMIN))
-                authorize(HttpMethod.GET, "/stored", permitAll)
-                authorize(HttpMethod.DELETE, "/cars/*", hasAuthority(ADMIN))
                 authorize(HttpMethod.DELETE, "/checkups/*", hasAuthority(ADMIN))
                 authorize(anyRequest, authenticated)
             }

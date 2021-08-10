@@ -22,18 +22,23 @@ import org.springframework.data.web.PagedResourcesAssembler
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.setup.MockMvcBuilders
+import org.springframework.web.context.WebApplicationContext
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDate
 import java.time.LocalDateTime
 
 @WebMvcTest
 class MainControllerTest @Autowired constructor(
-    private val mvc: MockMvc,
+    webApplicationContext: WebApplicationContext,
     private val mapper: ObjectMapper
 ) {
+    private val mvc = MockMvcBuilders
+        .webAppContextSetup(webApplicationContext)
+        .build()
+
     @MockkBean
     lateinit var carService: CarService
     @MockkBean
@@ -50,7 +55,7 @@ class MainControllerTest @Autowired constructor(
     lateinit var checkUpPagedResourceAssembler: PagedResourcesAssembler<CarCheckUpEntity>
 
     @Test
-    @WithMockUser(authorities = ["SCOPE_ADMIN"])
+    @WithMockUser(authorities = ["SCOPE_USER"])
     fun testAddingCar() {
         val carDTO = AddCarDTO(1L, "Ford", "Ka", 2010, 12345L)
 

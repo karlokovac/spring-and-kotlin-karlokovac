@@ -5,9 +5,11 @@ import com.infinum.academy.restserver.assemblers.CheckUpResourceAssembler
 import com.infinum.academy.restserver.models.AddCarDTO
 import com.infinum.academy.restserver.models.CarCheckUpEntity
 import com.infinum.academy.restserver.models.CarCheckUpResource
+import com.infinum.academy.restserver.models.CarDetailsPair
 import com.infinum.academy.restserver.models.CarEntity
 import com.infinum.academy.restserver.models.CarResource
 import com.infinum.academy.restserver.services.CarCheckUpService
+import com.infinum.academy.restserver.services.CarDetailsService
 import com.infinum.academy.restserver.services.CarService
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PagedResourcesAssembler
@@ -27,11 +29,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 class CarController(
     private val carService: CarService,
     private val carCheckUpService: CarCheckUpService,
+    private val carDetailsService: CarDetailsService,
     private val carResourceAssembler: CarResourceAssembler,
     private val carCheckUpResourceAssembler: CheckUpResourceAssembler
 ) {
 
-    @PostMapping()
+    @PostMapping
     fun addCar(@RequestBody carDTO: AddCarDTO): ResponseEntity<Unit> {
         val id = carService.addCar(carDTO)
         val location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -45,7 +48,7 @@ class CarController(
         return ResponseEntity.created(location).build()
     }
 
-    @GetMapping()
+    @GetMapping
     fun getAllCars(
         pageable: Pageable,
         pagedResourceAssembler: PagedResourcesAssembler<CarEntity>
@@ -74,6 +77,11 @@ class CarController(
                 carCheckUpResourceAssembler
             )
         )
+    }
+
+    @GetMapping("/saved-models")
+    fun fetchAllStoredModels(): ResponseEntity<List<CarDetailsPair>> {
+        return ResponseEntity.ok(carDetailsService.getAllStoredCarPairs())
     }
 
     @DeleteMapping("/{carId}")
