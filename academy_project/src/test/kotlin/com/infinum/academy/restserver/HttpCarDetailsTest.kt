@@ -1,6 +1,6 @@
 package com.infinum.academy.restserver
 
-import com.infinum.academy.restserver.models.CarDetailsDTO
+import com.infinum.academy.restserver.models.CarDetailsEntity
 import com.infinum.academy.restserver.services.HttpCarDataService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -62,9 +62,9 @@ class HttpCarDetailsTest @Autowired constructor(
             httpCarDataService.getAllCarData()
         ).isEqualTo(
             listOf(
-                CarDetailsDTO("Abarth", "1000", false),
-                CarDetailsDTO("Abarth", "1000 Bialbero", false),
-                CarDetailsDTO("Abarth", "1000 GT", false)
+                CarDetailsEntity("Abarth", "1000", false, 0),
+                CarDetailsEntity("Abarth", "1000 Bialbero", false, 0),
+                CarDetailsEntity("Abarth", "1000 GT", false, 0)
             )
         )
     }

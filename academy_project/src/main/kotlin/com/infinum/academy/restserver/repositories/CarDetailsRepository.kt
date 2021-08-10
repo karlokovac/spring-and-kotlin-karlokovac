@@ -1,12 +1,12 @@
 package com.infinum.academy.restserver.repositories
 
-import com.infinum.academy.restserver.models.CarDetails
+import com.infinum.academy.restserver.models.CarDetailsEntity
 import org.springframework.data.repository.Repository
 
-interface CarDetailsRepository : Repository<CarDetails, Long> {
-    fun save(carDetails: CarDetails): CarDetails
-    fun saveAll(carDetails: Iterable<CarDetails>)
-    fun findAll(): List<CarDetails>
-    fun findById(id: Long): CarDetails
-    fun findByManufacturerNameAndModelName(manufacturerName: String, modelName: String): CarDetails?
+interface CarDetailsRepository : Repository<CarDetailsEntity, Long> {
+    fun save(carDetailsEntity: CarDetailsEntity): CarDetailsEntity
+    fun saveAll(carDetailsEntity: Iterable<CarDetailsEntity>)
+    fun findAll(): List<CarDetailsEntity>
+    fun findById(id: Long): CarDetailsEntity
+    fun findByManufacturerNameAndModelName(manufacturerName: String, modelName: String): CarDetailsEntity?
 }

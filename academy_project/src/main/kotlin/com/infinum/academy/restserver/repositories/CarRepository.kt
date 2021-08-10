@@ -1,12 +1,12 @@
 package com.infinum.academy.restserver.repositories
 
-import com.infinum.academy.restserver.models.Car
+import com.infinum.academy.restserver.models.CarEntity
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.Repository
 
-interface CarRepository : Repository<Car, Long> {
-    fun save(car: Car): Car
-    fun findById(id: Long): Car
-    fun findAll(pageable: Pageable): Page<Car>
+interface CarRepository : Repository<CarEntity, Long> {
+    fun save(carEntity: CarEntity): CarEntity
+    fun findById(id: Long): CarEntity
+    fun findAll(pageable: Pageable): Page<CarEntity>
 }

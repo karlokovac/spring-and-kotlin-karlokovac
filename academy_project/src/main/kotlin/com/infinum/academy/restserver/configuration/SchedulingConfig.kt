@@ -34,8 +34,8 @@ class SchedulingConfig(
             carDetails
                 .filterNot { details ->
                     existing.any { carDetails ->
-                        carDetails.modelName==details.modelName &&
-                            carDetails.manufacturerName==details.manufacturerName
+                        carDetails.modelName == details.modelName &&
+                            carDetails.manufacturerName == details.manufacturerName
                     }
                 }
         )

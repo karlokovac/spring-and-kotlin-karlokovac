@@ -1,18 +1,16 @@
 package com.infinum.academy.restserver.services
 
 import com.infinum.academy.restserver.models.AddCarDTO
-import com.infinum.academy.restserver.models.CarDTO
-import com.infinum.academy.restserver.models.toCarDTO
-import com.infinum.academy.restserver.models.toDomainModel
-import com.infinum.academy.restserver.repositories.CarCheckUpRepository
+import com.infinum.academy.restserver.models.CarEntity
+import com.infinum.academy.restserver.models.toEntityModel
 import com.infinum.academy.restserver.repositories.CarRepository
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
 class CarService(
     val carRepository: CarRepository,
-    val carCheckUpRepository: CarCheckUpRepository,
     val carDetailsValidationService: CarDetailsValidationService
 ) {
 
@@ -21,18 +19,14 @@ class CarService(
             carDTO.manufacturerName,
             carDTO.modelName
         )
-        return carRepository.save(carDTO.toDomainModel(details)).id
+        return carRepository.save(carDTO.toEntityModel(details)).id
     }
 
-    fun getCar(id: Long): CarDTO {
-        val car = carRepository.findById(id)
-        return car.toCarDTO(
-            carCheckUpRepository.findByCarIdOrderByDateTimeDesc(id)
-        )
+    fun getCar(id: Long): CarEntity {
+        return carRepository.findById(id)
     }
 
-    fun getAllCars(pageable: Pageable) =
-        carRepository.findAll(pageable).map {
-            it.toCarDTO()
-        }
+    fun getAllCars(pageable: Pageable): Page<CarEntity> {
+        return carRepository.findAll(pageable)
+    }
 }
